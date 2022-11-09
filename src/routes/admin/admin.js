@@ -17,16 +17,16 @@ function admin(store) {
 
     /* setup routes */
     router.use('/auth', auth(authService(store.auth)))
-    // router.use((req, res, next) => {
-    //     req.log('/api/admin, req.user:', req.user)
-    //     if (!req.user) {
-    //         // see "HTTP authentication, passportjs", in notes
-    //         res.set({'WWW-Authenticate': 'Basic'})
-    //         return res.status(401).json({message: "the request is not authenticated"})
-    //     }
+    router.use((req, res, next) => {
+        req.log('/api/admin, req.user:', req.user)
+        if (!req.user) {
+            // see "HTTP authentication, passportjs", in notes
+            res.set({'WWW-Authenticate': 'Basic'})
+            return res.status(401).json({message: "the request is not authenticated"})
+        }
     
-    //     next()
-    // })
+        next()
+    })
 
     router.use('/product', product(store.product))
 
