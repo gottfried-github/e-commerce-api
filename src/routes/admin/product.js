@@ -2,7 +2,7 @@ import bodyParser from 'body-parser'
 import {Router} from 'express'
 import {makeEnsureFields, ensureFieldsCreate, ensureFieldsUpdate, handleUpdateMissingFields} from './product-helpers.js'
 
-function product(product) {
+function product(store) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), makeEnsureFields(ensureFieldsCreate), async (req, res, next) => {
@@ -10,7 +10,7 @@ function product(product) {
 
         let id = null
         try {
-            id = await product.create(req.body.fields)
+            id = await store.create(req.body.fields)
         } catch(e) {
             return next(e)
         }
@@ -24,7 +24,7 @@ function product(product) {
         let doc = null
 
         try {
-            doc = await product.update(req.params.id, req.body.fields)
+            doc = await store.update(req.params.id, req.body.fields)
         } catch (e) {
             return next(e)
         }
@@ -42,7 +42,7 @@ function product(product) {
         // console.log('/api/admin/product/, req.query:', req.query);
         let _product = null
         try {
-            _product = await product.getById(req.params.id)
+            _product = await store.getById(req.params.id)
         } catch(e) {
             return next(e)
         }

@@ -1,16 +1,19 @@
 import {Router} from 'express'
 
-import product from './routes/product.js'
-import {errorHandler} from './error-handler.js'
+import {log, logger} from './logger.js'
+
+import admin from './routes/admin/admin.js'
 
 function api(store) {
     const router = Router()
 
-    /* setup routes */
-    router.use('/product', product(store.product))
+    /* attach logger to express */
+    router.use((req, res, next) => {
+        req.log = log.bind(logger)
+        next()
+    })
 
-    /* central error handling */
-    router.use(errorHandler)
+    router.use('/admin', admin(store))
 
     return router
 }

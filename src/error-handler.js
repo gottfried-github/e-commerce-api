@@ -1,6 +1,6 @@
 import createError from 'http-errors'
-import * as m from '../../common/messages.js'
-import {isValidBadInputTree} from '../../common/helpers.js'
+import * as m from '../../bazar-common/messages.js'
+import {isValidBadInputTree} from '../../bazar-common/helpers.js'
 
 function errorHandler(e, req, res, next) {
     if (!e) return next()
