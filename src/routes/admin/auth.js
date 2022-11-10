@@ -2,7 +2,7 @@ import bodyParser from 'body-parser'
 import {Router} from 'express'
 
 import {log, logger} from '../../logger.js'
-import * as m from '../../../../bazar-common/messages.js'
+import * as m from '../../../../fi-common/messages.js'
 
 import {ensureCredentials, handleInvalidPassword} from './auth-helpers.js'
 

@@ -1,4 +1,4 @@
-import * as m from '../../../../bazar-common/messages.js'
+import * as m from '../../../../fi-common/messages.js'
 
 function ensureFields(body) {
     const fields = productStripFields(body)
