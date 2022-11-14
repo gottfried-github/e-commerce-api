@@ -50,12 +50,6 @@ function ensureFieldsUpdate(body) {
     return ensureFields(body)
 }
 
-function handleUpdateMissingFields(e, req, res, next) {
-    if (!e) return next()
-    if (!('code' in e) || m.FieldMissing.code !== e.code) return next(e)
-    res.status(400).json(e)
-}
-
 function makeEnsureFields(ensureFields) {
     return (req, res, next) => {
         const _res = ensureFields(req.body)

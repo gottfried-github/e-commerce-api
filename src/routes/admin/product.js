@@ -31,7 +31,7 @@ function product(store) {
 
         res.status(200).json(doc)
         // res.send('/product-update: endpoint is not implemented yet')
-    }, handleUpdateMissingFields)
+    })
 
     router.post('/delete', (req, res) => {
         res.send('/product-delete: endpoint is not implemented yet')
