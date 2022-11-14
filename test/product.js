@@ -1,3 +1,9 @@
-import {testHelpers} from './product-helpers.js'
+import {testEnsureFieldsCreate, testEnsureFieldsUpdate} from './product-helpers.js'
 
-testHelpers()
+describe("ensureFieldsCreate", () => {
+    testEnsureFieldsCreate()
+})
+
+describe("ensureFieldsUpdate", () => {
+    testEnsureFieldsUpdate()
+})
