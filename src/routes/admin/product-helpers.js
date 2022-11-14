@@ -1,25 +1,51 @@
 import * as m from '../../../../fi-common/messages.js'
 
+/**
+ * @description deeply type-check the fields
+*/
 function ensureFields(body) {
     const fields = productStripFields(body)
 
-    const errors = {}
-    if ('isInSale' in fields && 'boolean' !== typeof fields.isInSale) errors.isInSale = [new TypeError("'isInSale' must be boolean")]
-    if ('name' in fields && 'string' !== typeof fields.name) errors.name = [new TypeError("'name' must be a string")]
-    if ('itemInitial' in fields && 'string' !== typeof fields.itemInitial) errors.itemInitial = [new TypeError("'name' must be a string")]
+    const errors = {errors: [], node: {}}
 
-    if (Object.keys(errors).length) return {fields: null, errors}
+    if ('boolean' !== typeof fields.expose) errors.node.expose = {errors: [new TypeError("'isInSale' must be boolean")], node: null}
+    if ('string' !== typeof fields.name) errors.node.name = {errors: [new TypeError("'name' must be a string")], node: null}
+    if ('number' !== typeof fields.price) errors.node.price = {errors: [new TypeError("'price' must be a number")], node: null}
+    if ('boolean' !== typeof fields.is_in_stock) errors.node.is_in_stock = {errors: [new TypeError("'name' must be boolean")], node: null}
+    if (!Array.isArray(fields.photos)) errors.node.photos = {errors: [new TypeError("'photos' must be an array")], node: null}
+    if ('string' !== typeof fields.cover_photo) errors.node.coverPhoto = {errors: [new TypeError("'cover_photo' must be a string")], node: null}
+    if ('string' !== typeof fields.description) errors.node.description = {errors: [new TypeError("'description' must be a string")], node: null}
+
+    if (Array.isArray(fields.photos)) {
+        for (const photo of fields.photos) {
+            if ("string" !== typeof photo) {
+                if (!errors.node.photos) {errors.node.photos = {errors: [], node: []}}
+                errors.node.photos.node.push(new TypeError("children of 'photos' must be strings"))
+            }
+        }
+    }
+
+    if (Object.keys(errors.node).length) return {fields: null, errors}
+
     return {fields}
 }
 
+/**
+ * @returns error if `expose` isn't specified
+ * @description `expose` is required when creating
+*/
 function ensureFieldsCreate(body) {
-    if (!('isInSale' in body)) return {fields: null, errors: {isInSale: [m.FieldMissing.create("'isInSale' must be specified")]}}
+    if (!('expose' in body)) return {fields: null, errors: {errors: [], node: {expose: {errors: [m.FieldMissing.create("'expose' must be specified")], node: null}}}}
     return ensureFields(body)
 }
 
+/**
+ * body not empty
+*/
 function ensureFieldsUpdate(body) {
     const fields = productStripFields(body)
-    if (!Object.keys(fields).length) return {fields: null, errors: [m.FieldMissing.create("at least one of the fields must be specified")]}
+    
+    if (!Object.keys(fields).length) return {fields: null, errors: {errors: [m.FieldMissing.create("at least one of the fields must be specified")], node: null}}
 
     return ensureFields(body)
 }
@@ -37,7 +63,7 @@ function makeEnsureFields(ensureFields) {
 
         if (!_res.fields) {
             if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
-            return next(convertToAEDT(_res.errors))
+            return next(_res.errors)
         }
 
         req.body.fields = _res.fields
@@ -45,23 +71,19 @@ function makeEnsureFields(ensureFields) {
     }
 }
 
-function convertToAEDT(errors) {
-    const root = {node: {}}
-
-    const keys = Object.keys(errors)
-    console.log("convertToAEDT", keys);
-    for (const k of keys) {
-        root.node[k] = {errors: errors[k]}
-    }
-
-    return root
-}
-
-function productStripFields(fields) {
+/**
+ * get rid of additional fields
+*/
+function productStripFields(body) {
     const _fields = {}
-    if ('name' in fields) _fields.name = fields.name
-    if ('itemInitial' in fields) _fields.itemInitial = fields.itemInitial
-    if ('isInSale' in fields) _fields.isInSale = fields.isInSale
+
+    if ('expose' in body) _fields.expose = body.expose 
+    if ('name' in body) _fields.name = body.name 
+    if ('price' in body) _fields.price = body.price 
+    if ('is_in_stock' in body) _fields.is_in_stock = body.is_in_stock 
+    if ('photos' in body) _fields.photos = body.photos 
+    if ('cover_photo' in body) _fields.cover_photo = body.cover_photo 
+    if ('description' in body) _fields.description = body.description 
 
     return _fields
 }
