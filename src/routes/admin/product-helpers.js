@@ -53,7 +53,7 @@ function ensureFieldsUpdate(body, {ensureFields}) {
 function makeEnsureFields(ensureFields) {
     return (req, res, next) => {
         const _res = ensureFields(req.body)
-        console.log("makeEnsureFields-produced method, ensureFields _res:", _res)
+        // console.log("makeEnsureFields-produced method, ensureFields _res:", _res)
 
         if (!_res.fields) {
             if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
