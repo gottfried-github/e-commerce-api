@@ -34,7 +34,7 @@ function ensureFields(body) {
  * @returns error if `expose` isn't specified
  * @description `expose` is required when creating
 */
-function ensureFieldsCreate(body) {
+function ensureFieldsCreate(body, {ensureFields}) {
     if (!('expose' in body)) return {fields: null, errors: {errors: [], node: {expose: {errors: [m.FieldMissing.create("'expose' must be specified")], node: null}}}}
     return ensureFields(body)
 }
@@ -42,7 +42,7 @@ function ensureFieldsCreate(body) {
 /**
  * body not empty
 */
-function ensureFieldsUpdate(body) {
+function ensureFieldsUpdate(body, {ensureFields}) {
     const fields = productStripFields(body)
     
     if (!Object.keys(fields).length) return {fields: null, errors: {errors: [m.FieldMissing.create("at least one of the fields must be specified")], node: null}}

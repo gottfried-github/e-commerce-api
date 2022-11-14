@@ -1,11 +1,11 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
-import {makeEnsureFields, ensureFieldsCreate, ensureFieldsUpdate, handleUpdateMissingFields} from './product-helpers.js'
+import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from './product-helpers.js'
 
 function product(store) {
     const router = Router()
 
-    router.post('/create', bodyParser.json(), makeEnsureFields(ensureFieldsCreate), async (req, res, next) => {
+    router.post('/create', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
         // console.log('/admin/product/create, body.fields:', req.body.fields)
 
         let id = null
@@ -20,7 +20,7 @@ function product(store) {
     })
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
-    router.post('/update/:id', bodyParser.json(), makeEnsureFields(ensureFieldsUpdate), async (req, res, next) => {
+    router.post('/update/:id', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsUpdate(body, {ensureFields})}), async (req, res, next) => {
         let doc = null
 
         try {
