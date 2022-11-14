@@ -86,6 +86,5 @@ export {
     ensureFields,
     ensureFieldsCreate,
     ensureFieldsUpdate,
-    handleUpdateMissingFields,
     makeEnsureFields,
 }
