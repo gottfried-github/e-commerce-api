@@ -4,6 +4,7 @@ import * as m from '../../../../fi-common/messages.js'
  * @description deeply type-check the fields
 */
 function ensureFields(body) {
+    // NOTE: see Todo in EnsureFields behavior on additional properties
     const fields = productStripFields(body)
 
     const errors = {errors: [], node: {}}
