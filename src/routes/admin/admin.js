@@ -3,7 +3,7 @@ import passport from 'passport'
 
 import authService from '../../services/auth.js'
 
-import auth from './auth.js'
+import {auth} from './auth.js'
 import product from './product.js'
 
 import {errorHandler} from '../../error-handler.js'
