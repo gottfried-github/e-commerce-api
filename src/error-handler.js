@@ -12,8 +12,6 @@ function errorHandler(e, req, res, next) {
     }
 
     if (e instanceof m.Message) {
-        if (m.InvalidPassword.code === e.code) return res.status(400).json(e)
-
         const _e = m.InvalidErrorFormat.create()
 
         // req.log(`handleApiErrors, ${_e.message}, the error:`, e)

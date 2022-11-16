@@ -10,9 +10,9 @@ In both cases, user should be informed that the additional property won't be wri
 
 # Auth: invalid password
 * `authenticate` service rejects when invalid password
-* `authenticate` middleware passes the case to `next`
+* `authenticate` route handler passes the case to `next`
 * as a result, `errorHandler` wraps the errors in status `500`
 
 ## Todo
 * `authenticate` service should resolve when invalid password;
-* `authenticate` middleware should handle invalid password and not pass it to `next`
+* `authenticate` route handler should handle invalid password and not pass it to `next`

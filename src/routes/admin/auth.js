@@ -13,8 +13,18 @@ function auth(auth) {
         auth.authenticate(req, res, next).then(_res => {
             req.log('authMiddleware, authenticate resolved, _res:', _res)
     
-            if (true !== _res) return next(_res)
-    
+            if (true !== _res) {
+                if ('code' in _res) {
+                    if (m.InvalidCriterion.code === _res.code) {
+                        return res.status(400).send(_res)
+                    } else if (m.ResourceNotFound.code === _res.code) {
+                        return res.status(404).send(_res)
+                    }
+                } else {
+                    return next(_res)
+                }
+            }
+
             return res.json({message: "successfully logged in"})
         }).catch(e => {
             req.log('authMiddleware, authenticate rejected, e:', e)
@@ -36,7 +46,7 @@ function auth(auth) {
         })
     }
     
-    router.post('/login', bodyParser.urlencoded(), ensureCredentials, authenticate, handleInvalidPassword)
+    router.post('/login', bodyParser.urlencoded(), ensureCredentials, authenticate)
     router.post('/signup', bodyParser.urlencoded(), ensureCredentials, signup)
     
     router.get('/is-authenticated', (req, res) => {
