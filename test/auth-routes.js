@@ -1,4 +1,5 @@
 import {assert} from 'chai'
+import { isValidBadInputTree } from '../../fi-common/helpers.js'
 import * as m from '../../fi-common/messages.js'
 
 import {authenticate, signup} from '../src/routes/admin/auth.js'
@@ -8,17 +9,20 @@ class Req {
 }
 
 class Res {
-    constructor(statusCb) {
-        this._statusCb = statusCb
+    constructor(statusCb, jsonCb) {
+        this._statusCb = statusCb || null
+        this._jsonCb = jsonCb || null
     }
 
     status(...args) {
-        this._statusCb(...args)
+        if (this._statusCb) this._statusCb(...args)
 
         return this
     }
 
-    json() {}
+    json(...args) {
+        if (this._jsonCb) this._jsonCb(...args)
+    }
 }
 
 function testRoutes() {
@@ -43,6 +47,44 @@ function testRoutes() {
             }})
 
             assert.strictEqual(status, 404)
+        })
+    })
+
+    describe("dep resolves with true", () => {
+        it("responds using json", async () => {
+            let isCalled = false
+
+            await authenticate(new Req(), new Res(null, () => {isCalled = true}), () => {}, {authenticate: () => {
+                return Promise.resolve(true)
+            }})
+
+            assert.strictEqual(isCalled, true)
+        })
+    })
+
+    describe("dep rejects with value", () => {
+        it("calls 'next' with the value", async () => {
+            const value = 'some value'
+            let isEqual = false
+
+            await authenticate(new Req(), new Res(), (_value) => {isEqual = value === _value}, {authenticate: () => {
+                return Promise.reject(value)
+            }})
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
+
+    describe("dep resolves with arbitrary value", () => {
+        it("calls 'next' with the value", async () => {
+            const value = 'some value'
+            let isEqual = false
+
+            await authenticate(new Req(), new Res(), (_value) => {isEqual = value === _value}, {authenticate: () => {
+                return Promise.resolve(value)
+            }})
+
+            assert.strictEqual(isEqual, true)
         })
     })
 }
