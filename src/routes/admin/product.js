@@ -50,7 +50,7 @@ function product(store) {
         res.status(200).json(_product)
     })
 
-    return router
+    return {router}
 }
 
 export default product

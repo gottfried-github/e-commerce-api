@@ -54,7 +54,7 @@ function auth(auth) {
         res.json(!!req.user)
     })
 
-    return router
+    return {router, authenticate, signup}
 }
 
 export default auth

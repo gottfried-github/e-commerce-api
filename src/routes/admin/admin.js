@@ -16,7 +16,7 @@ function admin(store) {
     router.use(passport.session())
 
     /* setup routes */
-    router.use('/auth', auth(authService(store.auth)))
+    router.use('/auth', auth(authService(store.auth)).router)
     router.use((req, res, next) => {
         req.log('/api/admin, req.user:', req.user)
         if (!req.user) {
@@ -28,7 +28,7 @@ function admin(store) {
         next()
     })
 
-    router.use('/product', product(store.product))
+    router.use('/product', product(store.product).router)
 
     /* central error handling */
     router.use(errorHandler)
