@@ -9,8 +9,8 @@ import {ensureCredentials, handleInvalidPassword} from './auth-helpers.js'
 function auth(auth) {
     const router = Router()
 
-    function authenticate(req, res, next) {
-        auth.authenticate(req, res, next).then(_res => {
+    function authenticate(req, res, next, {authenticate}) {
+        authenticate(req, res, next).then(_res => {
             req.log('authMiddleware, authenticate resolved, _res:', _res)
     
             if (true !== _res) {
@@ -32,8 +32,8 @@ function auth(auth) {
         })
     }
     
-    function signup(req, res, next) {
-        auth.signup(req, res, next).then(_res => {
+    function signup(req, res, next, {signup}) {
+        signup(req, res, next).then(_res => {
             req.log('signupMiddleware, signup resolved, _res:', _res)
     
             if (true !== _res) return next(_res)
@@ -46,8 +46,8 @@ function auth(auth) {
         })
     }
     
-    router.post('/login', bodyParser.urlencoded(), ensureCredentials, authenticate)
-    router.post('/signup', bodyParser.urlencoded(), ensureCredentials, signup)
+    router.post('/login', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {authenticate(req, res, next, {authenticate: auth.authenticate})})
+    router.post('/signup', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {signup(req, res, next, {signup: auth.signup})})
     
     router.get('/is-authenticated', (req, res) => {
         req.log('/api/admin/auth/is-authenticated, req.user:', req.user)
