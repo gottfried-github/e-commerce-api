@@ -11,12 +11,10 @@ function authenticate(req, res, next, {authenticate}) {
         // req.log('authMiddleware, authenticate resolved, _res:', _res)
 
         if (true !== _res) {
-            if ('code' in _res) {
-                if (m.InvalidCriterion.code === _res.code) {
-                    return res.status(400).json(_res)
-                } else if (m.ResourceNotFound.code === _res.code) {
-                    return res.status(404).json(_res)
-                }
+            if (m.InvalidCriterion.code === _res.code) {
+                return res.status(400).json(_res)
+            } else if (m.ResourceNotFound.code === _res.code) {
+                return res.status(404).json(_res)
             } else {
                 return next(_res)
             }
