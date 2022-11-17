@@ -1,29 +1,8 @@
 import {assert} from 'chai'
-import { isValidBadInputTree } from '../../fi-common/helpers.js'
 import * as m from '../../fi-common/messages.js'
+import {Req, Res} from './mocks.js'
 
 import {authenticate, signup} from '../src/routes/admin/auth.js'
-
-class Req {
-    log() {}
-}
-
-class Res {
-    constructor(statusCb, jsonCb) {
-        this._statusCb = statusCb || null
-        this._jsonCb = jsonCb || null
-    }
-
-    status(...args) {
-        if (this._statusCb) this._statusCb(...args)
-
-        return this
-    }
-
-    json(...args) {
-        if (this._jsonCb) this._jsonCb(...args)
-    }
-}
 
 function testRoutes() {
     describe("dep resolves with InvalidCriterion", () => {
