@@ -38,6 +38,45 @@ function testHandler() {
             assert.strictEqual(isEqual, true)
         })
     })
+
+    describe("isValidBadInputTree returns true", () => {
+        it("assigns 400", () => {
+            const status = 400
+            let isEqual = false
+
+            _errorHandler({}, new Req(), new Res((_status) => {isEqual = status === _status}), () => {}, {
+                isValidBadInputTree: () => true
+            })
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
+
+    describe("passed an Error", () => {
+        it("assigns 500", () => {
+            const status = 500
+            let isEqual = false
+
+            _errorHandler(new Error(), new Req(), new Res((_status) => {isEqual = status === _status}), () => {}, {
+                isValidBadInputTree: () => false
+            })
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
+    
+    describe("passed arbitrary value", () => {
+        it("assigns 500", () => {
+            const status = 500
+            let isEqual = false
+
+            _errorHandler({}, new Req(), new Res((_status) => {isEqual = status === _status}), () => {}, {
+                isValidBadInputTree: () => false
+            })
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
 }
 
 export {testHandler}
