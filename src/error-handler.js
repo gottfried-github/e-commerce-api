@@ -11,13 +11,6 @@ function errorHandler(e, req, res, next) {
         return res.status(500).json({message: e.message})
     }
 
-    if (e instanceof m.Message) {
-        const _e = m.InvalidErrorFormat.create()
-
-        // req.log(`handleApiErrors, ${_e.message}, the error:`, e)
-        return res.status(500).json(_e)
-    }
-
     // bodyParser generates these
     if (e instanceof createError.HttpError) { // somehow isHttpError is not a function...
     // if (createError.isHttpError(e)) {
