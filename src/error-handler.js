@@ -2,10 +2,10 @@ import createError from 'http-errors'
 import * as m from '../../fi-common/messages.js'
 import {isValidBadInputTree} from '../../fi-common/helpers.js'
 
-function errorHandler(e, req, res, next) {
+function _errorHandler(e, req, res, next, {isValidBadInputTree}) {
     if (!e) return next()
 
-    console.log('errorHandler, e:', e);
+    // console.log('errorHandler, e:', e);
 
     // bodyParser generates these
     if (e instanceof createError.HttpError) { // somehow isHttpError is not a function...
@@ -23,4 +23,8 @@ function errorHandler(e, req, res, next) {
     return res.status(400).json(e)
 }
 
-export {errorHandler}
+function errorHandler(e, req, res, next) {
+    return _errorHandler(e, req, res, next, {isValidBadInputTree})
+}
+
+export {_errorHandler, errorHandler}
