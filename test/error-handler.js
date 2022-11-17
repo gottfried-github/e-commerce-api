@@ -1,7 +1,8 @@
 import {assert} from 'chai'
 import createError from 'http-errors'
 
-import {errorHandler} from '../src/error-handler.js'
+import {isValidBadInputTree} from '../../fi-common/helpers.js'
+import {_errorHandler} from '../src/error-handler.js'
 
 class Req {
     log() {}
@@ -30,7 +31,9 @@ function testHandler() {
             const status = 400, e = createError(400)
             let isEqual = false
 
-            errorHandler(e, new Req(), new Res((_status) => {console.log("Res._statusCb, _status:", _status); isEqual = status === _status}), () => {})
+            _errorHandler(e, new Req(), new Res((_status) => {isEqual = status === _status}), () => {}, {
+                isValidBadInputTree: () => false
+            })
 
             assert.strictEqual(isEqual, true)
         })
