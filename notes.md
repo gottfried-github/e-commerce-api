@@ -8,8 +8,9 @@ If user provides additional fields, they may expect that those fields will be wr
 
 In both cases, user should be informed that the additional property won't be written and operation should be discarded for user to correct their errors and retry.
 
-# Unified http response format
+# Unified error format from data layer
 ## Todo
-All responces have `status` and `message` properties - with, perhaps, additional properties - so that the client can always simply display the `message`. If there's extra info, the client can process that to their preference. An example of the latter is the `400` error, where the response contains details of the validation errors.
+1. all errors are `Message`s, which have `code` and `message`
+2. errors where tree is provided - such as `ValidationError` and, possibly, `ResourceExists` - have `tree` property
 
-Also, that way data layer could adhere to this format and assign status to errors. Sometimes doing that is appropriate because data layer has more info on the details of the error. An example of this is in `auth`, when user already exists: the data layer (the `store` layer) has the info on which field the error regards to (MongoDb's `keyValue` property of the `11000` error).
+Api can pass these to the client and client can simply check for the `tree` property to know whether to display data for particular fields.
