@@ -47,7 +47,8 @@ function product(store) {
             return next(e)
         }
 
-        res.status(200).json(_product)
+        if (null === _product) return res.status(404).json({message: "document not found"})
+        res.json(_product)
     })
 
     return {router}
