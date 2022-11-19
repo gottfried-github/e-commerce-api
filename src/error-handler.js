@@ -1,30 +1,32 @@
 import createError from 'http-errors'
 import * as m from '../../fi-common/messages.js'
-import {isValidBadInputTree} from '../../fi-common/helpers.js'
 
-function _errorHandler(e, req, res, next, {isValidBadInputTree}) {
+function _errorHandler(e, req, res, next) {
     if (!e) return next()
 
     // console.log('errorHandler, e:', e);
+    
+    if (e instanceof m.Message) {
+        if (m.ResourceExists.code === e.code) return res.status(409).json(e)
+        if (m.ValidationError.code === e.code) return res.status(400).json(e)
+    }
 
     // bodyParser generates these
     if (e instanceof createError.HttpError) { // somehow isHttpError is not a function...
     // if (createError.isHttpError(e)) {
         return res.status(e.status).json(e)
     }
-    
+
     if (e instanceof Error) {
         // req.log("handleApiErrors, an instance of Error occured, the instance:", e)
         return res.status(500).json({message: e.message})
     }
 
-    if (!isValidBadInputTree(e)) return res.status(500).json(m.InvalidErrorFormat.create())
-
-    return res.status(400).json(e)
+    return res.status(500).json({message: "something went wrong"})
 }
 
 function errorHandler(e, req, res, next) {
-    return _errorHandler(e, req, res, next, {isValidBadInputTree})
+    return _errorHandler(e, req, res, next)
 }
 
 export {_errorHandler, errorHandler}
