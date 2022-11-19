@@ -22,7 +22,7 @@ function auth(store) {
             passport.authenticate('local', (e, user, _res) => {
                 if (e) return reject(e)
     
-                // user not found or password incorrect (see point 1. and point 7. in `what happens during requests` in `passportjs` reference)
+                // user not found (see point 1. and point 7. in `what happens during requests` in `passportjs` reference)
                 if (!user) return resolve(_res)
     
                 req.log('/login, passport.authenticate cb - user is truthy')

@@ -14,3 +14,8 @@ In both cases, user should be informed that the additional property won't be wri
 2. errors where tree is provided - such as `ValidationError` and, possibly, `ResourceExists` - have `tree` property
 
 Api can pass these to the client and client can simply check for the `tree` property to know whether to display data for particular fields.
+
+# Auth: invalid password
+## Todo
+* `authenticate` service should reject with `InvalidCriterion` on incorrect password
+* `_errorHandler` should handle `InvalidCriterion`
