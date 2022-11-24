@@ -5,6 +5,7 @@ import authService from '../../services/auth.js'
 
 import {auth} from './auth.js'
 import product from './product.js'
+import user from './user.js'
 
 import {errorHandler} from '../../error-handler.js'
 
@@ -29,6 +30,7 @@ function admin(store) {
     })
 
     router.use('/product', product(store.product).router)
+    router.use('/user', user(store.auth).router)
 
     /* central error handling */
     router.use(errorHandler)
