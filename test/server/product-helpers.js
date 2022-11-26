@@ -1,7 +1,7 @@
 import {assert} from 'chai'
-import * as m from '../../fi-common/messages.js'
+import * as m from '../../../fi-common/messages.js'
 
-import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from '../src/routes/admin/product-helpers.js'
+import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from '../../src/server/routes/admin/product-helpers.js'
 
 function testEnsureFieldsCreate() {
     describe("given no 'expose'", () => {

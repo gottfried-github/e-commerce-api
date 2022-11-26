@@ -1,4 +1,4 @@
-import * as m from '../../../../fi-common/messages.js'
+import * as m from '../../../../../fi-common/messages.js'
 
 /**
  * @description deeply type-check the fields

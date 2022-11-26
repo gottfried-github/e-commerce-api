@@ -1,5 +1,5 @@
 import {log, logger} from '../logger.js'
-import * as m from '../../../fi-common/messages.js'
+import * as m from '../../../../fi-common/messages.js'
 
 import passport from 'passport'
 import {setup} from './auth-setup.js'

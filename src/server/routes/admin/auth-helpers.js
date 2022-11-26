@@ -1,4 +1,4 @@
-import * as m from "../../../../fi-common/messages.js"
+import * as m from "../../../../../fi-common/messages.js"
 
 // 1 in 'Function'/'inward'
 function ensureCredentials(req, res, next) {

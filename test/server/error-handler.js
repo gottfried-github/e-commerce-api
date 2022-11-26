@@ -1,10 +1,10 @@
 import {assert} from 'chai'
 import createError from 'http-errors'
-import * as m from '../../fi-common/messages.js'
+import * as m from '../../../fi-common/messages.js'
 
 import {Req, Res} from './mocks.js'
 
-import {_errorHandler} from '../src/error-handler.js'
+import {_errorHandler} from '../../src/server/error-handler.js'
 
 function testHandler() {
     describe("passed HttpError", () => {

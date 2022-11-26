@@ -1,8 +1,8 @@
 import {assert} from 'chai'
-import * as m from '../../fi-common/messages.js'
+import * as m from '../../../fi-common/messages.js'
 import {Req, Res} from './mocks.js'
 
-import {authenticate, signup} from '../src/routes/admin/auth.js'
+import {authenticate, signup} from '../../src/server/routes/admin/auth.js'
 
 function testRoutes() {
     describe("dep resolves with InvalidCriterion", () => {
