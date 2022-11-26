@@ -6,14 +6,14 @@ import {authenticate, signup} from '../../src/server/routes/admin/auth.js'
 
 function testRoutes() {
     describe("dep resolves with InvalidCriterion", () => {
-        it("assigns 400", async () => {
-            let status = null
+        it("calls 'next' with the message", async () => {
+            let isEqual = false
             
-            await authenticate(new Req(), new Res((_status) => {status = _status}), () => {}, {authenticate: (req, res, next) => {
+            await authenticate(new Req(), new Res((_status) => {status = _status}), (msg) => {isEqual = m.InvalidCriterion.code === msg.code}, {authenticate: (req, res, next) => {
                 return Promise.resolve(m.InvalidCriterion.create('message'))
             }})
 
-            assert.strictEqual(status, 400)
+            assert.strictEqual(isEqual, true)
         })
     })
     
