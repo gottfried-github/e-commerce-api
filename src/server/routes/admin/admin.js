@@ -9,7 +9,7 @@ import user from './user.js'
 
 import {errorHandler} from '../../error-handler.js'
 
-function admin(store) {
+function admin(store, options) {
     const router = Router()
 
     /* setup passport */
@@ -29,7 +29,7 @@ function admin(store) {
         next()
     })
 
-    router.use('/product', product(store.product).router)
+    router.use('/product', product(store.product, options).router)
     router.use('/user', user(store.auth).router)
 
     /* central error handling */

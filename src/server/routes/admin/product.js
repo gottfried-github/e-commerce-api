@@ -1,8 +1,10 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
-import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from './product-helpers.js'
 
-function product(store) {
+import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from './product-helpers.js'
+import files from './product-files.js'
+
+function product(store, options) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
@@ -49,6 +51,10 @@ function product(store) {
 
         if (null === _product) return res.status(404).json({message: "document not found"})
         res.json(_product)
+    })
+
+    router.get('/upload', files(options.productUploadPath), (req, res, next) => {
+        res.status(201).json({message: "uploaded files successfully"})
     })
 
     return {router}
