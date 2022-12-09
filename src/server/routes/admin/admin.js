@@ -29,7 +29,7 @@ function admin(store, options) {
         next()
     })
 
-    router.use('/product', product(store.product, options).router)
+    router.use('/product', product(store.product, store.photo, options).router)
     router.use('/user', user(store.auth).router)
 
     /* central error handling */

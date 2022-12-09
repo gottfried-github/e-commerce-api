@@ -4,7 +4,7 @@ import {Router} from 'express'
 import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from './product-helpers.js'
 import files from './product-files.js'
 
-function product(store, options) {
+function product(storeProduct, storePhoto, options) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
@@ -12,7 +12,7 @@ function product(store, options) {
 
         let id = null
         try {
-            id = await store.create(req.body.fields)
+            id = await storeProduct.create(req.body.fields)
         } catch(e) {
             return next(e)
         }
@@ -26,7 +26,7 @@ function product(store, options) {
         let doc = null
 
         try {
-            doc = await store.update(req.params.id, req.body.fields)
+            doc = await storeProduct.update(req.params.id, req.body.fields)
         } catch (e) {
             return next(e)
         }
@@ -44,7 +44,7 @@ function product(store, options) {
         // console.log('/api/admin/product/, req.query:', req.query);
         let _product = null
         try {
-            _product = await store.getById(req.params.id)
+            _product = await storeProduct.getById(req.params.id)
         } catch(e) {
             return next(e)
         }
@@ -53,9 +53,7 @@ function product(store, options) {
         res.json(_product)
     })
 
-    router.get('/upload', files(options.productUploadPath), (req, res, next) => {
-        res.status(201).json({message: "uploaded files successfully"})
-    })
+    router.use('photos', files(storePhoto, storeProduct, options.productUploadPath).router)
 
     return {router}
 }
