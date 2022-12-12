@@ -53,7 +53,7 @@ function product(storeProduct, storePhoto, options) {
         res.json(_product)
     })
 
-    router.use('photos', files(storePhoto, storeProduct, options.productUploadPath).router)
+    router.use('photos', files(storePhoto, storeProduct, options).router)
 
     return {router}
 }

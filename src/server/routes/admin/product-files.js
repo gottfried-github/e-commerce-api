@@ -15,13 +15,14 @@ async function recurse(data, cb, recurse) {
 }
 
 /**
- * @param {String} uploadPath absolute path to uploads dir
+ * @param {String} paths.productUploadPath absolute path to uploads dir
+ * @param {String} paths.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored
 */
-function main(storePhoto, storeProduct, uploadPath) {
+function main(storePhoto, storeProduct, paths) {
     const upload = multer({storage: multer.diskStorage({
         destination: async (req, file, cb) => {
             if (!req.body?.id) return cb(createError(400, "'id' field must precede 'files' in the formdata"))
-            const dirPath = path.join(uploadPath, req.body.id)
+            const dirPath = path.join(paths.productUploadPath, req.body.id)
 
             await fs.mkdir(dirPath, {recursive: true})
 
@@ -40,7 +41,7 @@ function main(storePhoto, storeProduct, uploadPath) {
         // write to Photo
         try {
             _resPhotos = await storePhoto.createMany(req.files.map(file => {
-                return {path: file.path}
+                return {path: path.join('/', path.relative(paths.productDiffPath, file.path))}
             }))
         } catch(e) {
             if (m.ValidationError.code === e.code) {
