@@ -6,14 +6,6 @@ import createError from 'http-errors'
 import express from 'express'
 import multer from 'multer'
 
-async function recurse(data, cb, recurse) {
-    if (1 === data.length) return await cb(data.pop())
-    
-    await cb(data.pop())
-    
-    return await recurse(data, cb, recurse)
-}
-
 /**
  * @param {String} paths.productUploadPath absolute path to uploads dir
  * @param {String} paths.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored
