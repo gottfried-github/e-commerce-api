@@ -52,7 +52,7 @@ function main(storePhoto, storeProduct, paths) {
 
         // write to the product
         try {
-            await storeProduct.updatePhotos(req.body.id, _resPhotos)
+            _resProduct = await storeProduct.updatePhotos(req.body.id, _resPhotos)
         } catch(e) {
             return next(e)
         }
