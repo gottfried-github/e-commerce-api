@@ -8,7 +8,7 @@ function product(storeProduct, storePhoto, options) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
-        // console.log('/admin/product/create, body.fields:', req.body.fields)
+        // console.log('/api/admin/product/create, body.fields:', req.body.fields)
 
         let id = null
         try {
@@ -53,7 +53,7 @@ function product(storeProduct, storePhoto, options) {
         res.json(_product)
     })
 
-    router.use('photos', files(storePhoto, storeProduct, options).router)
+    router.use('/photos', files(storePhoto, storeProduct, options).router)
 
     return {router}
 }

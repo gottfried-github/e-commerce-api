@@ -27,7 +27,7 @@ function main(storePhoto, storeProduct, paths) {
 
     const router = express.Router()
 
-    router.get('upload', upload, async (req, res, next) => {
+    router.post('/upload', upload, async (req, res, next) => {
         let _resPhotos = null
         
         // write to Photo
