@@ -45,7 +45,7 @@ async function upload(id, files, successCb, failureCb) {
         form.append('files', file)
     }
 
-    const res = await fetch('/api/admin/product/upload', {
+    const res = await fetch('/api/admin/product/photos/upload', {
         method: 'POST', body: form
     })
 
