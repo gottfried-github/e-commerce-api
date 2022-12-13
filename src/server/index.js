@@ -13,7 +13,7 @@ function api(store, options) {
         next()
     })
 
-    router.use('/admin', admin(store))
+    router.use('/admin', admin(store, options))
 
     return router
 }
