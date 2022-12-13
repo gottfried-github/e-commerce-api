@@ -57,6 +57,8 @@ function main(storePhoto, storeProduct, paths) {
             return next(e)
         }
 
+        if (null === _resProduct) return res.status(400).json({message: 'photos saved but no document matched id'})
+
         res.status(201).json({message: 'successfully uploaded the photos'})
     })
 
