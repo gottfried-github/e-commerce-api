@@ -23,15 +23,15 @@ function product(storeProduct, storePhoto, options) {
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
     router.post('/update/:id', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsUpdate(body, {ensureFields})}), async (req, res, next) => {
-        let res = null
+        let _res = null
 
         try {
-            res = await storeProduct.update(req.params.id, req.body.fields)
+            _res = await storeProduct.update(req.params.id, req.body.fields)
         } catch (e) {
             return next(e)
         }
 
-        res.status(200).json(res)
+        _res.status(200).json(_res)
         // res.send('/product-update: endpoint is not implemented yet')
     })
 
