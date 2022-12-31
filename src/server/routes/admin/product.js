@@ -39,6 +39,18 @@ function product(storeProduct, storePhoto, options) {
         res.send('/product-delete: endpoint is not implemented yet')
     })
 
+    router.get('/get-many', async (req, res, next) => {
+        let products = null
+
+        try {
+            products = await storeProduct.getMany()
+        } catch(e) {
+            return next(e)
+        }
+
+        res.json(products)
+    })
+
     // see '/api/admin/product:id' in notes for why I don't validate params.id
     router.get('/:id', async (req, res, next) => {
         // console.log('/api/admin/product/, req.query:', req.query);
@@ -51,18 +63,6 @@ function product(storeProduct, storePhoto, options) {
 
         if (null === _product) return res.status(404).json({message: "document not found"})
         res.json(_product)
-    })
-
-    router.get('/get-many', async (req, res, next) => {
-        let products = null
-
-        try {
-            products = await storeProduct.getMany()
-        } catch(e) {
-            return next(e)
-        }
-
-        res.json(products)
     })
 
     router.use('/photos', files(storePhoto, storeProduct, options).router)
