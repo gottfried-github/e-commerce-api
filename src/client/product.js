@@ -58,7 +58,7 @@ async function upload(id, files, successCb, failureCb) {
 /**
  * @param {String} id id of product to get
 */
-async function get(id) {
+async function get(id, successCb, failureCb) {
     const res = await fetch(`/api/admin/product/${id}`, {method: 'GET'})
 
     const body = await res.json()
@@ -67,4 +67,13 @@ async function get(id) {
     return successCb(body, res)
 }
 
-export {create, update, upload, get}
+async function getMany(successCb, failureCb) {
+    const res = await fetch(`/api/admin/product/get-many`, {method: 'GET'})
+
+    const body = await res.json()
+
+    if (!res.ok) return failureCb(body, res)
+    return successCb(body, res)
+}
+
+export {create, update, upload, get, getMany}

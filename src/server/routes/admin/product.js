@@ -53,6 +53,18 @@ function product(storeProduct, storePhoto, options) {
         res.json(_product)
     })
 
+    router.get('/get-many', async (req, res, next) => {
+        let products = null
+
+        try {
+            products = await storeProduct.getMany()
+        } catch(e) {
+            return next(e)
+        }
+
+        res.json(products)
+    })
+
     router.use('/photos', files(storePhoto, storeProduct, options).router)
 
     return {router}
