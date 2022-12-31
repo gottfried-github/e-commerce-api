@@ -55,4 +55,16 @@ async function upload(id, files, successCb, failureCb) {
     return successCb(body, res)
 }
 
-export {create, update, upload}
+/**
+ * @param {String} id id of product to get
+*/
+async function get(id) {
+    const res = await fetch(`/api/admin/product/${id}`, {method: 'GET'})
+
+    const body = await res.json()
+
+    if (!res.ok) return failureCb(body, res)
+    return successCb(body, res)
+}
+
+export {create, update, upload, get}
