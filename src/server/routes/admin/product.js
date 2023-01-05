@@ -31,7 +31,15 @@ function product(storeProduct, storePhoto, options) {
             return next(e)
         }
 
-        _res.status(200).json(_res)
+        let doc = null
+
+        try {
+            doc = await storeProduct.getById(req.params.id)
+        } catch (e) {
+            return next(e)
+        }
+
+        res.status(200).json(doc)
         // res.send('/product-update: endpoint is not implemented yet')
     })
 
