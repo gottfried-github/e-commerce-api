@@ -1,13 +1,13 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
 
-import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from './product-helpers.js'
+import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFieldsCreate, makeEnsureFieldsUpdate} from './product-helpers.js'
 import files from './product-files.js'
 
 function product(storeProduct, storePhoto, options) {
     const router = Router()
 
-    router.post('/create', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
+    router.post('/create', bodyParser.json(), makeEnsureFieldsCreate((body) => {return ensureFieldsCreate(body, {ensureFields})}), async (req, res, next) => {
         // console.log('/api/admin/product/create, body.fields:', req.body.fields)
 
         let id = null
@@ -22,11 +22,11 @@ function product(storeProduct, storePhoto, options) {
     })
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
-    router.post('/update/:id', bodyParser.json(), makeEnsureFields((body) => {return ensureFieldsUpdate(body, {ensureFields})}), async (req, res, next) => {
+    router.post('/update/:id', bodyParser.json(), makeEnsureFieldsUpdate((body) => {return ensureFieldsUpdate(body, {ensureFields})}), async (req, res, next) => {
         let _res = null
 
         try {
-            _res = await storeProduct.update(req.params.id, req.body.fields)
+            _res = await storeProduct.update(req.params.id, {write: req.body.write || null, remove: req.body.remove || null})
         } catch (e) {
             return next(e)
         }

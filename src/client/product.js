@@ -16,9 +16,14 @@ async function create(_body, successCb, failureCb) {
 
 /**
  * @param {String} id bson ObjectId-formatted id
- * @param {Object} _body
+ * @param {Object} write fields to write
+ * @param {Array} remove fields to remove (`String`s)
 */
-async function update(id, _body, successCb, failureCb) {
+async function update(id, write, remove, successCb, failureCb) {
+    const _body = {}
+    if (write) _body.write = write
+    if (remove) _body.remove = remove
+
     const res = await fetch(`/api/admin/product/update/${id}`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

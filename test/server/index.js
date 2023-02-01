@@ -1,7 +1,6 @@
 import {testHandler} from './error-handler.js'
 import {testRoutes} from './auth-routes.js'
-import {testEnsureFieldsCreate, testEnsureFieldsUpdate, testMakeEnsureFields} from './product-helpers.js'
-
+import {testEnsureFieldsCreate, testEnsureFieldsUpdate, testMakeEnsureFieldsCreate, testMakeEnsureFieldsUpdate} from './product-helpers.js'
 describe("errorHandler", () => {
     testHandler()
 })
@@ -18,6 +17,10 @@ describe("ensureFieldsUpdate", () => {
     testEnsureFieldsUpdate()
 })
 
-describe("testMakeEnsureFields", () => {
-    testMakeEnsureFields()
+describe("testMakeEnsureFieldsCreate", () => {
+    testMakeEnsureFieldsCreate()
+})
+
+describe("testMakeEnsureFieldsUpdate", () => {
+    testMakeEnsureFieldsUpdate()
 })

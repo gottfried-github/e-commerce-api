@@ -64,7 +64,7 @@ function ensureFieldsCreate(body, {ensureFields}) {
 */
 function ensureFieldsUpdate(body, {ensureFields}) {
     const fields = productStripFields(body)
-    
+
     if (!Object.keys(fields).length) return {
         fields: null, 
         errors: m.ValidationError.create('some fields are filled incorrectly', {
@@ -75,10 +75,9 @@ function ensureFieldsUpdate(body, {ensureFields}) {
     return ensureFields(body)
 }
 
-function makeEnsureFields(ensureFields) {
+function makeEnsureFieldsCreate(ensureFields) {
     return (req, res, next) => {
         const _res = ensureFields(req.body)
-        // console.log("makeEnsureFields-produced method, ensureFields _res:", _res)
 
         if (!_res.fields) {
             if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
@@ -86,6 +85,25 @@ function makeEnsureFields(ensureFields) {
         }
 
         req.body.fields = _res.fields
+        next()
+    }
+}
+
+function makeEnsureFieldsUpdate(ensureFields) {
+    return (req, res, next) => {
+        if (!req.body.write) {
+            req.body.write = null
+            return next()
+        }
+
+        const _res = ensureFields(req.body.write)
+        
+        if (!_res.fields) {
+            if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
+            return next(_res.errors)
+        }
+
+        req.body.write = _res.fields
         next()
     }
 }
@@ -109,7 +127,6 @@ function productStripFields(body) {
 
 export {
     ensureFields,
-    ensureFieldsCreate,
-    ensureFieldsUpdate,
-    makeEnsureFields,
+    ensureFieldsCreate, ensureFieldsUpdate,
+    makeEnsureFieldsCreate, makeEnsureFieldsUpdate,
 }
