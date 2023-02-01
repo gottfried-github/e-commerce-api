@@ -1,18 +1,19 @@
 import {assert} from 'chai'
 import * as m from '../../../fi-common/messages.js'
 
-import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFields} from '../../src/server/routes/admin/product-helpers.js'
+import {ensureFields, ensureFieldsCreate, ensureFieldsUpdate, makeEnsureFieldsCreate, makeEnsureFieldsUpdate} from '../../src/server/routes/admin/product-helpers.js'
 
 function testEnsureFieldsCreate() {
     describe("given no 'expose'", () => {
         it("returns FieldMissing for 'expose'", () => {
             const res = ensureFieldsCreate({name: 'some name'}, {ensureFields: () => {}})
 
+            // console.log(res);
             assert(
                 res.errors &&
-                'expose' in res.errors.node &&
-                res.errors.node.expose.errors.length === 1 &&
-                m.FieldMissing.code === res.errors.node.expose.errors[0].code, "no errors or no errors for 'expose' or no FieldMissing and/or other errors present"
+                'expose' in res.errors.tree.node &&
+                res.errors.tree.node.expose.errors.length === 1 &&
+                m.FieldMissing.code === res.errors.tree.node.expose.errors[0].code, "no errors or no errors for 'expose' or no FieldMissing and/or other errors present"
             )
         })
 
@@ -52,8 +53,8 @@ function testEnsureFieldsUpdate() {
             
             assert(
                 res.errors &&
-                res.errors.errors.length === 1 &&
-                m.FieldMissing.code === res.errors.errors[0].code, 
+                res.errors.tree.errors.length === 1 &&
+                m.FieldMissing.code === res.errors.tree.errors[0].code, 
                 "no errors or no FieldMissing and/or other errors"
             )
         })
@@ -87,13 +88,13 @@ function testEnsureFieldsUpdate() {
     })
 }
 
-function testMakeEnsureFields() {
+function testMakeEnsureFieldsCreate() {
     describe("gets called with cb", () => {
         it("produced method calls cb", () => {
             const body = {data: "some data"}
             let wasCalled = false
 
-            makeEnsureFields(() => {
+            makeEnsureFieldsCreate(() => {
                 wasCalled = true; 
                 return {fields: true}
             })({body}, {}, () => {})
@@ -105,7 +106,7 @@ function testMakeEnsureFields() {
             const body = {data: "some data"}
             let isEqual = false
 
-            makeEnsureFields((_body) => {
+            makeEnsureFieldsCreate((_body) => {
                 isEqual = body === _body; 
                 return {fields: true}
             })({body}, {}, () => {})
@@ -119,7 +120,7 @@ function testMakeEnsureFields() {
             const errors = "errors"
             let isEqual = false
 
-            makeEnsureFields(() => {
+            makeEnsureFieldsCreate(() => {
                 return {errors}
             })({}, {}, (_errors) => {isEqual = errors === _errors})
 
@@ -131,7 +132,7 @@ function testMakeEnsureFields() {
         it("assigns the data to req.body", () => {
             const fields = "fields", body = {}
 
-            makeEnsureFields(() => {
+            makeEnsureFieldsCreate(() => {
                 return {fields}
             })({body}, {}, () => {})
 
@@ -141,7 +142,7 @@ function testMakeEnsureFields() {
         it("calls 'next'", () => {
             let wasCalled = false
 
-            makeEnsureFields(() => {
+            makeEnsureFieldsCreate(() => {
                 return {fields: "fields"}
             })({body: {}}, {}, () => {wasCalled = true})
 
@@ -150,4 +151,97 @@ function testMakeEnsureFields() {
     })
 }
 
-export {testEnsureFieldsCreate, testEnsureFieldsUpdate, testMakeEnsureFields}
+function testMakeEnsureFieldsUpdate() {
+    describe("gets called with cb", () => {
+        it("produced method calls cb", () => {
+            const body = {write: {data: "some data"}}
+            let wasCalled = false
+
+            makeEnsureFieldsUpdate(() => {
+                wasCalled = true; 
+                return {fields: true}
+            })({body}, {}, () => {})
+
+            assert.strictEqual(wasCalled, true)
+        })
+        
+        it("produced method calls cb with passed data", () => {
+            const body = {write: {data: "some data"}}
+            let isEqual = false
+
+            makeEnsureFieldsUpdate((_body) => {
+                isEqual = body.write === _body; 
+                return {fields: true}
+            })({body}, {}, () => {})
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
+
+    describe("produced method is called with no 'write' property on 'body'", () => {
+        it("doesn't call callback", () => {
+            const isCalled = false
+            
+            makeEnsureFieldsUpdate(() => {
+                isCalled = true
+            })({body: {}}, {}, () => {})
+
+            assert.strictEqual(isCalled, false)
+        })
+        
+        it("calls 'next'", () => {
+            let isCalled = null
+            
+            makeEnsureFieldsUpdate(() => {})({body: {}}, {}, () => {
+                isCalled = true
+            })
+
+            assert.strictEqual(isCalled, true)
+        })
+        
+        it("assigns 'null' to 'body.write'", () => {
+            const body = {body: {}}
+            
+            makeEnsureFieldsUpdate(() => {})({body}, {}, () => {})
+
+            assert.strictEqual(body.write, null)
+        })
+    })
+
+    describe("cb returns errors", () => {
+        it("produced method calls 'next' with errors", () => {
+            const errors = "errors"
+            let isEqual = false
+
+            makeEnsureFieldsUpdate(() => {
+                return {errors}
+            })({body: {write: {}}}, {}, (_errors) => {isEqual = errors === _errors})
+
+            assert.strictEqual(isEqual, true)
+        })
+    })
+
+    describe("cb returns data", () => {
+        it("assigns the data to req.body", () => {
+            const fields = "fields", body = {write: {}}
+
+            makeEnsureFieldsUpdate(() => {
+                return {fields}
+            })({body}, {}, () => {})
+
+            assert.strictEqual(body.write, fields)
+        })
+        
+        it("calls 'next'", () => {
+            let wasCalled = false
+
+            makeEnsureFieldsUpdate(() => {
+                return {fields: "fields"}
+            })({body: {write: {}}}, {}, () => {wasCalled = true})
+
+            assert.strictEqual(wasCalled, true)
+        })
+    })
+}
+
+export {testEnsureFieldsCreate, testEnsureFieldsUpdate, testMakeEnsureFieldsCreate, testMakeEnsureFieldsUpdate}
