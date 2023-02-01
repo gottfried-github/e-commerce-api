@@ -1,6 +1,6 @@
 {
   "name": "nodejs-ecommerce_api",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "api for nodejs-ecommerce",
   "main": "src/index.js",
   "type": "module",
