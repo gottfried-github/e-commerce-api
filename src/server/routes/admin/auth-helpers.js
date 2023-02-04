@@ -1,15 +1,4 @@
-import * as m from "../../../../bazar-common/messages.js"
-
-function handleInvalidPassword(e, req, res, next) {
-    if (!e) return next()
-
-    req.log("routes-admin-auth, handleInvalidPassword - e:", e)
-
-    if (!(e instanceof m.Message)) return next(e)
-
-    if (m.InvalidPassword.code === e.code) return res.status(400).json(e)
-    return next(e)
-}
+import * as m from "../../../../../fi-common/messages.js"
 
 // 1 in 'Function'/'inward'
 function ensureCredentials(req, res, next) {
@@ -30,4 +19,4 @@ function ensureCredentials(req, res, next) {
     return next(errors)
 }
 
-export {handleInvalidPassword, ensureCredentials}
+export {ensureCredentials}

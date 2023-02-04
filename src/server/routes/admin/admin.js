@@ -3,12 +3,13 @@ import passport from 'passport'
 
 import authService from '../../services/auth.js'
 
-import auth from './auth.js'
+import {auth} from './auth.js'
 import product from './product.js'
+import user from './user.js'
 
 import {errorHandler} from '../../error-handler.js'
 
-function admin(store) {
+function admin(store, options) {
     const router = Router()
 
     /* setup passport */
@@ -16,7 +17,7 @@ function admin(store) {
     router.use(passport.session())
 
     /* setup routes */
-    router.use('/auth', auth(authService(store.auth)))
+    router.use('/auth', auth(authService(store.auth)).router)
     router.use((req, res, next) => {
         req.log('/api/admin, req.user:', req.user)
         if (!req.user) {
@@ -28,7 +29,8 @@ function admin(store) {
         next()
     })
 
-    router.use('/product', product(store.product))
+    router.use('/product', product(store.product, store.photo, options).router)
+    router.use('/user', user(store.auth).router)
 
     /* central error handling */
     router.use(errorHandler)

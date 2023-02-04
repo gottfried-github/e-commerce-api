@@ -4,7 +4,7 @@ import {log, logger} from './logger.js'
 
 import admin from './routes/admin/admin.js'
 
-function api(store) {
+function api(store, options) {
     const router = Router()
 
     /* attach logger to express */
@@ -13,7 +13,7 @@ function api(store) {
         next()
     })
 
-    router.use('/admin', admin(store))
+    router.use('/admin', admin(store, options))
 
     return router
 }

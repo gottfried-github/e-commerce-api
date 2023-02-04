@@ -1,6 +1,7 @@
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import {logger, log} from '../logger.js'
+import * as m from '../../../../fi-common/messages.js'
 
 function setup(store) {
     async function local(name, password, cb) {
@@ -10,6 +11,9 @@ function setup(store) {
             // this throws if password is incorrect
             user = await store.getByName(name, password)
         } catch(e) {
+
+            if (m.InvalidCriterion.code === e.code) return cb(m.InvalidCriterion('password is incorrect'))
+            
             // this should call the callback to passport.authenticate with the error (as in 1. of `what happens during requests`)
             return cb(e)
         }
