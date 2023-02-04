@@ -26,6 +26,10 @@ See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parse
 * status: `400`,
 * body: `ValidationError` with `tree` being `ajv-errors-to-data-tree`-formatted tree
 
+#### Invalid criterion
+* status: `400`
+* body: `InvalidCriterion`
+
 #### Resource Exists
 * status: `409`
 * body: `ResourceExists` with `tree`, if any, being `ajv-errors-to-data-tree`-formatted tree
@@ -46,41 +50,59 @@ url: `POST /api/admin/product/create`
 
 #### request
 * Content-Type: `application/json`
-* body: `{
+* body: 
+```json
+{
+    expose: Boolean,
     name?: String,
-    itemInitial?: ObjectId,
-    isInSale: Boolean
-}`
+    price?: Number,
+    is_in_stock?: Boolean,
+    photos_all?: Array,
+    photos?: Array,
+    cover_photo?: String,
+    description?: String,
+}
+```
+
+#### response
+* success
+    * status: `201`
+    * body: the created document's id
+* invalid data (no `expose` field, improper types or `ValidationError` on behalf of the store)
+    * as described in [Bad Input](#bad-input)
 
 ### update
 url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id`)
 
 #### request
 * Content-Type: `application/json`,
-* body: `{
+* body: 
+```json
+{
+    expose?: Boolean,
     name?: String,
-    itemInitial?: String,
-    isInSale?: Boolean
-}`
+    price?: Number,
+    is_in_stock?: Boolean,
+    photos_all?: Array,
+    photos?: Array,
+    cover_photo?: String,
+    description?: String,
+}
+```
 
 Note: at least one field in fields must be specified.
 
 #### response
 * success
     * status: `200`,
-    * body: 
-    ```json
-        {
-            message: "some message",
-            doc: <the updated product>
-        }
-    ```
-* invalid id
-    * status: `400`,
-    * body: as described in `Bad Input`
+    * body: the updated document
 * no field
     * status: `400`,
     * body: `ValidationError` without `tree`
+* `ValidationError` on behalf of the store
+    * as described in [Bad Input](#bad-input)
+* `InvalidCriterion` on behalf of the store
+    * as described in [Invalid criterion](#invalid-criterion)
 
 ## Signup
 url: `POST /api/admin/auth/signup`
@@ -94,8 +116,7 @@ url: `POST /api/admin/auth/signup`
     * status: `201`
     * body: `{}`
 * user name exists
-    * status: `409`
-    * body: as described in `Resource Exists`
+    * as described in [Resource Exists](#resource-exists)
 
 ## Login
 url: `POST /api/admin/auth/login`
@@ -112,5 +133,4 @@ url: `POST /api/admin/auth/login`
     status: `404`
     body: `ResourceNotFound`
 * incorrect password
-    status: `400`
-    body: `InvalidCriterion`
+    * as described in [Invalid criterion](#invalid-criterion)
