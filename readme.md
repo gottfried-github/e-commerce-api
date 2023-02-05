@@ -9,6 +9,7 @@ See api specification [here](#rest-api).
 * **store.** A storage implementation that adheres to the specification, defined [here](fi-app#store-api)
 * **options**
     * `productUploadPath` (mandatory): absolute path to file upload directory
+    * `productDiffPath` (mandatory): absolute path relative to which actual pathname of each uploaded file should be stored
 
 # Express session
 The router uses `passport` which requires `express-session`. So the app in which you use the router needs to use `express-session`.
