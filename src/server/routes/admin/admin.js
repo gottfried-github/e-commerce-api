@@ -18,6 +18,8 @@ function admin(store, options) {
 
     /* setup routes */
     router.use('/auth', auth(authService(store.auth)).router)
+    
+    // restrict access to other routes unless logged in
     router.use((req, res, next) => {
         req.log('/api/admin, req.user:', req.user)
         if (!req.user) {

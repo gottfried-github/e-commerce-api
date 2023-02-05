@@ -21,6 +21,18 @@ The router uses `passport` which requires `express-session`. So the app in which
 
 **Outward.** Assign status codes and messages to the output of the store and send it in response to the client.
 
+# Code overview
+## Server
+Routes are grouped into a number of `express` routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](error-handler.js) which maps the various errors to http status codes and sends them to the client.
+
+## Client
+I [wrap](client/index.js) http requests to the api in a succint interface which can be used by a client application.
+
+# Test
+`npm run test`
+
+Authentication route handlers are unit tested as well as `_errorHandler` and product route-level validation.
+
 # Specification
 ## Data structure
 ```json
