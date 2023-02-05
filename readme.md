@@ -14,6 +14,24 @@ The router uses `passport` which requires `express-session`. So the app in which
     * `productUploadPath` (mandatory): absolute path to file upload directory
 
 # Specification
+## Messages
+Messages represent the interface between the store and the api. They are abstracted away from the specifics of any particular database and describe what happens with records in general terms. 
+
+All messages have `code` and `message` properties. Almost all messages have `data` property. Some messages also have additional properties.
+
+### ResourceNotFound
+On read operation, a document satisfying a given query doesn't exist.
+
+### ResourceExists
+On write operation, a document with a given value already exists (e.g., a field with unique key).
+
+### InvalidCriterion
+* on read operation, a given query is syntactically invalid
+* on update operation, a given query doesn't match any documents
+
+### ValidationError
+Document fails data validation. Has the `tree` property which describes the structure of the failed data in [ajv-errors-to-data-tree]() format.
+
 ## Content type
 The responses are JSON-encoded. The `Content-Type` of responses is `application/json`.
 
