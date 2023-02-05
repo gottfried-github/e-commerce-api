@@ -3,21 +3,40 @@ The API for [the e-commerce project]().
 
 The package produces an `express` router which you can attach to an `express` app. 
 
-See api specification [here](#specification).
-
-# Express session
-The router uses `passport` which requires `express-session`. So the app in which you use the router needs to use `express-session`.
+See api specification [here](#rest-api).
 
 # Arguments
 * **store.** A storage implementation that adheres to the specification, defined [here](fi-app#store-api)
 * **options**
     * `productUploadPath` (mandatory): absolute path to file upload directory
 
+# Express session
+The router uses `passport` which requires `express-session`. So the app in which you use the router needs to use `express-session`.
+
+# The function of the api
+**Inward.** Api transmits the received data over to the store. In doing so, it should make sure that:
+1. appropriate fields exist in the received data
+2. the values are of the correct type
+3. fields that don't belong to data, don't exist
+
+**Outward.** Assign status codes and messages to the output of the store and send it in response to the client.
+
 # Specification
+## Data structure
+```json
+{
+  expose: Boolean,
+  ... 
+}
+```
+Whether all fields except `expose` are required depends on the value of `expose`: if it is `true` then the other fields are required, and if it is `false` then the other fields are not required.
+
 ## Messages
 Messages represent the interface between the store and the api. They are abstracted away from the specifics of any particular database and describe what happens with records in general terms. 
 
 All messages have `code` and `message` properties. Almost all messages have `data` property. Some messages also have additional properties.
+
+The code for messages can be found [here](common/messages.js)
 
 ### ResourceNotFound
 On read operation, a document satisfying a given query doesn't exist.
@@ -32,27 +51,84 @@ On write operation, a document with a given value already exists (e.g., a field 
 ### ValidationError
 Document fails data validation. Has the `tree` property which describes the structure of the failed data in [ajv-errors-to-data-tree]() format.
 
-## Content type
+## Store api
+### create
+#### parameters
+  1. `fields`
+
+#### behavior
+* **success**: return id of created document
+* **validation failure**: throw `ValidationError`
+
+Any other error shall be treated as an internal error.
+
+### update
+#### parameters
+  1. `id`
+  2. `write`
+  3. `remove`
+
+#### behavior
+  * **success**: return `true`
+  * **invalid `id` or no document with given id**: throw `InvalidCriterion`
+  * **validation failure**: throw `ValidationError`
+
+Any other error shall be treated as an internal error.
+
+### update photos
+#### parameters
+1. `id`
+2. `photos`
+
+#### behavior
+* **success**: return `true`
+* **invalid `id`**: throw `InvalidCriterion`
+* **validation failure**: throw `ValidationError`
+* **no document with given `id`**: return `null`
+
+### delete
+#### parameters
+  1. `id`
+
+#### behavior
+  * **success**: return `true`
+  * **invalid `id` or no document with given id**: throw `InvalidCriterion`
+
+Any other error shall be treated as an internal error.
+
+### getById
+#### parameters
+  1. `id`
+
+#### behavior
+  * **success**: return the found document
+  * **no document found**: return `null`
+  * **invalid id**: throw `InvalidCriterion`
+
+Any other error shall be treated as an internal error.
+
+## REST api
+### Content type
 The responses are JSON-encoded. The `Content-Type` of responses is `application/json`.
 
-## Errors
-### Handling malformed requests
+### Errors
+#### Handling malformed requests
 See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parser.html#errors) for scenarios in which `body-parser` generates errors.
 
-### Other errors
-#### Bad input
+#### Other errors
+##### Bad input
 * status: `400`,
 * body: `ValidationError` with `tree` being `ajv-errors-to-data-tree`-formatted tree
 
-#### Invalid criterion
+##### Invalid criterion
 * status: `400`
 * body: `InvalidCriterion`
 
-#### Resource Exists
+##### Resource exists
 * status: `409`
 * body: `ResourceExists` with `tree`, if any, being `ajv-errors-to-data-tree`-formatted tree
 
-#### Internal Error
+##### Internal error
 * status: `500`,
 * body: 
 ```json
@@ -62,11 +138,11 @@ See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parse
 }
 ```
 
-## Product
-### create
+### Product
+#### create
 url: `POST /api/admin/product/create`
 
-#### request
+##### request
 * Content-Type: `application/json`
 * body: 
 ```json
@@ -82,17 +158,17 @@ url: `POST /api/admin/product/create`
 }
 ```
 
-#### response
+##### response
 * success
     * status: `201`
     * body: the created document's id
 * invalid data (no `expose` field, improper types or `ValidationError` on behalf of the store)
     * as described in [Bad Input](#bad-input)
 
-### update
+#### update
 url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id`)
 
-#### request
+##### request
 * Content-Type: `application/json`,
 * body: 
 ```json
@@ -110,7 +186,7 @@ url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id
 
 Note: at least one field in fields must be specified.
 
-#### response
+##### response
 * success
     * status: `200`,
     * body: the updated document
@@ -122,31 +198,37 @@ Note: at least one field in fields must be specified.
 * `InvalidCriterion` on behalf of the store
     * as described in [Invalid criterion](#invalid-criterion)
 
-## Signup
+### Signup
 url: `POST /api/admin/auth/signup`
 
-### request
+#### request
 * Content-Type: `application/x-www-form-urlencoded`,
 * body: `name=String&password=String`
 
-### response
+#### response
 * success
     * status: `201`
-    * body: `{}`
+    * body: 
+        ```json
+        {}
+        ```
 * user name exists
-    * as described in [Resource Exists](#resource-exists)
+    * as described in [Resource exists](#resource-exists)
 
-## Login
+### Login
 url: `POST /api/admin/auth/login`
 
-### request
+#### request
 * Content-Type: `application/x-www-form-urlencoded`,
 * body: `name=String&password=String`
 
-### response
+#### response
 * success
     status: `200`
-    body: `{message: "successfully logged in"}`
+    body: 
+    ```json
+    {message: "successfully logged in"}
+    ```
 * user doesn't exist
     status: `404`
     body: `ResourceNotFound`
