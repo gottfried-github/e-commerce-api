@@ -26,10 +26,19 @@ The router uses `passport` which requires `express-session`. So the app in which
 ## Server
 Routes are grouped into a number of `express` routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
+### Validation
+['ensureFields']() does validation of incoming data and is invoked before other route handlers in the `express` handler chain.
+
+#### Handling undefined fields: todo
+Currently, the validation silently removes fields that are not defined in the specification. Now I think that this is a bad idea and the validation should instead throw an error when such a field occurs: if user provides additional fields, they may expect that those fields will be written into database and instead they are silently removed; also, a typo might happen, in which case user intended to add a legal field but they won't be notified of the typo and the field they intended to write ends up not written. In both cases, user should be informed that the additional field won't be written and operation should be discarded for user to correct their errors and retry.
+
+#### Implementation: todo
+The validation should probably be implemented using some sort of json-schema validator, like, say, [`ajv`]().
+
 ## Client
 I [wrap](client/index.js) http requests to the api in a succint interface which can be used by a client application.
 
-# Test
+# Tests
 `npm run test`
 
 Authentication route handlers are unit tested as well as `_errorHandler` and product route-level validation.
