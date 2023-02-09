@@ -18,7 +18,7 @@ The router uses [passport](http://www.passportjs.org/) which requires [express-s
 
 # Code overview
 ## Server
-Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](https://github.com/gottfried-github/e-commerce-api/blob/master/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
+Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation
 ['ensureFields'](https://github.com/gottfried-github/e-commerce-api/blob/7bf8028537f3c967113374fa14439cf1326210f3/src/server/routes/admin/product-helpers.js#L6) does validation of incoming data and is invoked before other route handlers in the [express](https://expressjs.com/) handler chain.
