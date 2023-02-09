@@ -53,6 +53,9 @@ Authentication route handlers are unit tested as well as `_errorHandler` and pro
 ```
 Whether all fields except `expose` are required depends on the value of `expose`: if it is `true` then the other fields are required, and if it is `false` then the other fields are not required.
 
+### `photos_all` and `photos`
+Product has `photos_all` and `photos` fields which are arrays of urls pointing to files on the server. The former represents all the photos that are uploaded to the server for the given product; the latter - the photos that are to be displayed to the visitor of the site.
+
 ## Messages
 Messages represent the interface between the store and the api. They are abstracted away from the specifics of any particular database and describe what happens with records in general terms. 
 
