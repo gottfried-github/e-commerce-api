@@ -56,7 +56,7 @@ Messages represent the interface between the store and the api. They are abstrac
 
 All messages have `code` and `message` properties. Almost all messages have `data` property. Some messages also have additional properties.
 
-The code for messages can be found [here]()
+The code for messages can be found [here](https://github.com/gottfried-github/e-commerce-common)
 
 ### ResourceNotFound
 On read operation, a document satisfying a given query doesn't exist.
