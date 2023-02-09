@@ -1,26 +1,20 @@
 # Description
-The API for [the e-commerce project]().
+The REST API for [the e-commerce project](). Work in progress: currently, there's no notion of orders or cart, etc.. Implemented is authentication (with [passport]()), [data validation](#validation) and CRUD routes and file upload logic for product as well as a [client library](#client) making it easier to make requests.
 
 The package produces an `express` router which you can attach to an `express` app. 
 
-See api specification [here](#rest-api).
+* [REST API specification](#rest-api)
+* [store API specification](#store-api)
 
-# Arguments
-* **store.** A storage implementation that adheres to the specification, defined [here](fi-app#store-api)
+# Usage
+## Arguments
+* **store.** A storage implementation that adheres to the [specification](#store-api)
 * **options**
     * `productUploadPath` (mandatory): absolute path to file upload directory
     * `productDiffPath` (mandatory): absolute path relative to which actual pathname of each uploaded file should be stored
 
-# Express session
+## Express session
 The router uses `passport` which requires `express-session`. So the app in which you use the router needs to use `express-session`.
-
-# The function of the api
-**Inward.** Api transmits the received data over to the store. In doing so, it should make sure that:
-1. appropriate fields exist in the received data
-2. the values are of the correct type
-3. fields that don't belong to data, don't exist
-
-**Outward.** Assign status codes and messages to the output of the store and send it in response to the client.
 
 # Code overview
 ## Server
@@ -61,7 +55,7 @@ Messages represent the interface between the store and the api. They are abstrac
 
 All messages have `code` and `message` properties. Almost all messages have `data` property. Some messages also have additional properties.
 
-The code for messages can be found [here](common/messages.js)
+The code for messages can be found [here]()
 
 ### ResourceNotFound
 On read operation, a document satisfying a given query doesn't exist.
@@ -133,6 +127,14 @@ Any other error shall be treated as an internal error.
 Any other error shall be treated as an internal error.
 
 ## REST api
+### The function of the api
+**Inward.** Api transmits the received data over to the store. In doing so, it should make sure that:
+1. appropriate fields exist in the received data
+2. the values are of the correct type
+3. fields that don't belong to data, don't exist
+
+**Outward.** Assign status codes and messages to the output of the store and send it in response to the client.
+
 ### Content type
 The responses are JSON-encoded. The `Content-Type` of responses is `application/json`.
 
