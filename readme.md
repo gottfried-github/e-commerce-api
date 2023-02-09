@@ -1,5 +1,5 @@
 # Description
-The REST API for [the e-commerce project](). Work in progress: currently, there's no notion of orders or cart, etc.. Implemented is authentication (with [passport]()), [data validation](#validation) and CRUD routes and file upload logic for product as well as a [client library](#client) making it easier to make requests.
+The REST API for the [e-commerce project](https://github.com/gottfried-github/e-commerce-app). Work in progress: currently, there's no notion of orders or cart, etc.. Implemented is authentication (with [passport](http://www.passportjs.org/)); [data validation](#validation); CRUD routes and file upload logic for product; a [client library](#client) making it easier to make requests.
 
 The package produces an `express` router which you can attach to an `express` app. 
 
@@ -14,23 +14,23 @@ The package produces an `express` router which you can attach to an `express` ap
     * `productDiffPath` (mandatory): absolute path relative to which actual pathname of each uploaded file should be stored
 
 ## Express session
-The router uses `passport` which requires `express-session`. So the app in which you use the router needs to use `express-session`.
+The router uses [passport](http://www.passportjs.org/) which requires [express-session](https://www.npmjs.com/package/express-session). So the app in which you use the router needs to use [express-session](https://www.npmjs.com/package/express-session).
 
 # Code overview
 ## Server
-Routes are grouped into a number of `express` routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](error-handler.js) which maps the various errors to http status codes and sends them to the client.
+Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](https://github.com/gottfried-github/e-commerce-api/blob/master/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](https://github.com/gottfried-github/e-commerce-api/blob/master/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation
-['ensureFields']() does validation of incoming data and is invoked before other route handlers in the `express` handler chain.
+['ensureFields'](https://github.com/gottfried-github/e-commerce-api/blob/7bf8028537f3c967113374fa14439cf1326210f3/src/server/routes/admin/product-helpers.js#L6) does validation of incoming data and is invoked before other route handlers in the [express](https://expressjs.com/) handler chain.
 
 #### Handling undefined fields: todo
 Currently, the validation silently removes fields that are not defined in the specification. Now I think that this is a bad idea and the validation should instead throw an error when such a field occurs: if user provides additional fields, they may expect that those fields will be written into database and instead they are silently removed; also, a typo might happen, in which case user intended to add a legal field but they won't be notified of the typo and the field they intended to write ends up not written. In both cases, user should be informed that the additional field won't be written and operation should be discarded for user to correct their errors and retry.
 
 #### Implementation: todo
-The validation should probably be implemented using some sort of json-schema validator, like, say, [`ajv`]().
+The validation should probably be implemented using some sort of json-schema validator, like, say, [`ajv`](https://ajv.js.org/).
 
 ## Client
-I [wrap](client/index.js) http requests to the api in a succint interface which can be used by a client application.
+I [wrap](https://github.com/gottfried-github/e-commerce-api/tree/master/src/client) http requests to the api in a succint interface which can be used by a client application.
 
 # Tests
 `npm run test`
@@ -68,7 +68,7 @@ On write operation, a document with a given value already exists (e.g., a field 
 * on update operation, a given query doesn't match any documents
 
 ### ValidationError
-Document fails data validation. Has the `tree` property which describes the structure of the failed data in [ajv-errors-to-data-tree]() format.
+Document fails data validation. Has the `tree` property which describes the structure of the failed data in [ajv-errors-to-data-tree](https://www.npmjs.com/package/ajv-errors-to-data-tree) format.
 
 ## Store api
 ### create
@@ -140,12 +140,12 @@ The responses are JSON-encoded. The `Content-Type` of responses is `application/
 
 ### Errors
 #### Handling malformed requests
-See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parser.html#errors) for scenarios in which `body-parser` generates errors.
+See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parser.html#errors) for scenarios in which [body-parser](https://www.npmjs.com/package/body-parser) generates errors.
 
 #### Other errors
 ##### Bad input
 * status: `400`,
-* body: `ValidationError` with `tree` being `ajv-errors-to-data-tree`-formatted tree
+* body: `ValidationError`
 
 ##### Invalid criterion
 * status: `400`
@@ -153,7 +153,7 @@ See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parse
 
 ##### Resource exists
 * status: `409`
-* body: `ResourceExists` with `tree`, if any, being `ajv-errors-to-data-tree`-formatted tree
+* body: `ResourceExists` with `tree`, if any, being [ajv-errors-to-data-tree](https://www.npmjs.com/package/ajv-errors-to-data-tree)-formatted tree
 
 ##### Internal error
 * status: `500`,
