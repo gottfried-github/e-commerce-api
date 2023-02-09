@@ -5,6 +5,7 @@ The package produces an `express` router which you can attach to an `express` ap
 
 * [REST API specification](#rest-api)
 * [store API specification](#store-api)
+* [code overview](#code-overview)
 
 # Usage
 ## Arguments
