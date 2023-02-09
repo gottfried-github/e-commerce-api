@@ -78,7 +78,7 @@ Document fails data validation. Has the `tree` property which describes the stru
 
 #### behavior
 * **success**: return id of created document
-* **validation failure**: throw `ValidationError`
+* **validation failure**: throw [ValidationError](#validationerror)
 
 Any other error shall be treated as an internal error.
 
@@ -90,8 +90,8 @@ Any other error shall be treated as an internal error.
 
 #### behavior
   * **success**: return `true`
-  * **invalid `id` or no document with given id**: throw `InvalidCriterion`
-  * **validation failure**: throw `ValidationError`
+  * **invalid `id` or no document with given id**: throw [InvalidCriterion](#invalidcriterion)
+  * **validation failure**: throw [ValidationError](#validationerror)
 
 Any other error shall be treated as an internal error.
 
@@ -102,8 +102,8 @@ Any other error shall be treated as an internal error.
 
 #### behavior
 * **success**: return `true`
-* **invalid `id`**: throw `InvalidCriterion`
-* **validation failure**: throw `ValidationError`
+* **invalid `id`**: throw [InvalidCriterion](#invalidcriterion)
+* **validation failure**: throw [ValidationError](#validationerror)
 * **no document with given `id`**: return `null`
 
 ### delete
@@ -112,7 +112,7 @@ Any other error shall be treated as an internal error.
 
 #### behavior
   * **success**: return `true`
-  * **invalid `id` or no document with given id**: throw `InvalidCriterion`
+  * **invalid `id` or no document with given id**: throw [InvalidCriterion](#invalidcriterion)
 
 Any other error shall be treated as an internal error.
 
@@ -123,7 +123,7 @@ Any other error shall be treated as an internal error.
 #### behavior
   * **success**: return the found document
   * **no document found**: return `null`
-  * **invalid id**: throw `InvalidCriterion`
+  * **invalid id**: throw [InvalidCriterion](#invalidcriterion)
 
 Any other error shall be treated as an internal error.
 
@@ -146,11 +146,11 @@ See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parse
 #### Other errors
 ##### Bad input
 * status: `400`,
-* body: `ValidationError`
+* body: [ValidationError](#validationerror)
 
 ##### Invalid criterion
 * status: `400`
-* body: `InvalidCriterion`
+* body: [InvalidCriterion](#invalidcriterion)
 
 ##### Resource exists
 * status: `409`
