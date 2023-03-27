@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
 
+import * as m from '../../../../../fi-common/messages.js'
+
 import validate from './product-validate.js'
 import files from './product-files.js'
 
@@ -8,12 +10,14 @@ function product(storeProduct, storePhoto, options) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), 
+        // validate
         (req, res, next) => {
             const errors = validate(req.body)
-            if (errors) return next(errors)
+            if (errors) return next(m.ValidationError.create("some fields are filled incorrectly", errors))
 
             return next()
         }, 
+        // handle request
         async (req, res, next) => {
             // console.log('/api/admin/product/create, body.fields:', req.body.fields)
 
@@ -25,22 +29,23 @@ function product(storeProduct, storePhoto, options) {
             }
 
             res.status(201).json(id)
-            // res.send('/product-create: endpoint is not implemented yet')
         }
     )
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
     router.post('/update/:id', bodyParser.json(), 
+        // validate
         (req, res, next) => {
             if (req.body.write) {
                 const errors = validate(req.body.write)
-                if (errors) return next(errors)
+                if (errors) return next(m.ValidationError.create("some fields are filled incorrectly", errors))
 
                 return next()
             }
 
             return next()
         }, 
+        // handle request
         async (req, res, next) => {
             let _res = null
 
@@ -59,7 +64,6 @@ function product(storeProduct, storePhoto, options) {
             }
 
             res.status(200).json(doc)
-            // res.send('/product-update: endpoint is not implemented yet')
         }
     )
 
