@@ -1,17 +1,10 @@
-import {testEnsureFieldsCreate, testEnsureFieldsUpdate, testMakeEnsureFieldsCreate, testMakeEnsureFieldsUpdate} from './product-helpers.js'
+import test from './product-validate.js'
+import testFilterErrors from './product-helpers.js'
 
-describe("ensureFieldsCreate", () => {
-    testEnsureFieldsCreate()
+describe("validate", () => {
+    test()
 })
 
-describe("ensureFieldsUpdate", () => {
-    testEnsureFieldsUpdate()
-})
-
-describe("testMakeEnsureFieldsCreate", () => {
-    testMakeEnsureFieldsCreate()
-})
-
-describe("testMakeEnsureFieldsUpdate", () => {
-    testMakeEnsureFieldsUpdate()
+describe("helpers", () => {
+    testFilterErrors()
 })

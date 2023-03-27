@@ -1,4 +1,6 @@
 import Ajv from 'ajv'
+import {toTree} from 'ajv-errors-to-data-tree'
+
 import * as m from '../../../../../fi-common/messages.js'
 
 import filterErrors from './product-helpers.js'
@@ -43,7 +45,7 @@ const _validate = ajv.compile(schema)
 function validate(fields) {
     if (_validate(fields)) return false
 
-    const errors = toTree(_validate.errors, () => {
+    const errors = toTree(_validate.errors, (e) => {
         // see Which errors should not occur in the data
         if ('additionalProperties' === e.keyword) throw new Error("data contains fields, not defined in the spec")
 
@@ -58,4 +60,4 @@ function validate(fields) {
     return errors
 }
 
-export default validate
+export {validate as default, _validate}
