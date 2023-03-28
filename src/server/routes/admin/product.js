@@ -23,7 +23,7 @@ function product(storeProduct, storePhoto, options) {
 
             let id = null
             try {
-                id = await storeProduct.create(req.body.fields)
+                id = await storeProduct.create(req.body)
             } catch(e) {
                 return next(e)
             }
