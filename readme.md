@@ -46,6 +46,7 @@ Let's consider the case of the product schema.
     2. `itemInitial`: `required`
 
 We've established, in [Which errors to report](#which-errors-to-report), that in a case like this, we don't want to report the `required` errors.
+
 2. Additionally, with `{expose: true, name: 'a name'}`, `expose` will still have an `enum` error, from the second schema in `oneOf`.
 
 3. `{expose: true, name: 5}`. This will have a `required` error for `itemInitial`.
