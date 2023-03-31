@@ -44,6 +44,7 @@ function auth(auth) {
 
     router.post('/login', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {authenticate(req, res, next, {authenticate: auth.authenticate})})
     router.post('/signup', bodyParser.urlencoded(), ensureCredentials, 
+        // validate password
         (req, res, next) => {
             const errors = validatePsswd(req.body.password)
             if (errors) return next(errors)
