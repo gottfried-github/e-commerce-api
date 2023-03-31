@@ -60,7 +60,7 @@ So, whenever an error occurs, there will be identical errors for each of the sch
 2. if `expose` satisfies one of the schemas, there will be no `enum` error for that schema (because of `1` from above).
 
 ##### Filtering out irrelevant errors
-[`filterErrors`](product-helpers.js#L23) adheres to these principles.
+[`filterErrors`](https://github.com/gottfried-github/e-commerce-api/blob/8a879c13dd7c5d014dca5aa27216f002f9556c1b/src/server/routes/admin/product-helpers.js#L23) adheres to these principles.
 
 1. *In case if `expose` is invalid or missing*: the `required` errors for the other fields are irrelevant - see [Which errors to report](#which-errors-to-report); all the other errors will be identical for each of the schemas -- so we can
     1. ignore the `required` errors for the other fields and
