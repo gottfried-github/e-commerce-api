@@ -22,13 +22,51 @@ The router uses [passport](http://www.passportjs.org/) which requires [express-s
 Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation
-['ensureFields'](https://github.com/gottfried-github/e-commerce-api/blob/7bf8028537f3c967113374fa14439cf1326210f3/src/server/routes/admin/product-helpers.js#L6) does validation of incoming data and is invoked before other route handlers in the [express](https://expressjs.com/) handler chain.
+Input validation is done [here](product-validate.js). 
 
-#### Handling undefined fields: todo
-Currently, the validation silently removes fields that are not defined in the specification. Now I think that this is a bad idea and the validation should instead throw an error when such a field occurs: if user provides additional fields, they may expect that those fields will be written into database and instead they are silently removed; also, a typo might happen, in which case user intended to add a legal field but they won't be notified of the typo and the field they intended to write ends up not written. In both cases, user should be informed that the additional field won't be written and operation should be discarded for user to correct their errors and retry.
+I implement validation using `json-schema` `oneOf` keyword: I apply different schemas for when `expose` is `true` and when it's `false` (see [Data structure](#data-structure) for the relationship between `expose` and other fields).
 
-#### Implementation: todo
-The validation should probably be implemented using some sort of json-schema validator, like, say, [`ajv`](https://ajv.js.org/).
+#### Which errors to report
+Consider the case: 
+```json
+{
+    expose: 5,
+    name: 10
+}
+```
+If `expose` is invalid, the document is invalid regardless whether other fields are valid or not. Does this mean that I should only report the `expose` error? I guess no, because if I report the other error as well, the user can correct both errors and if I don't, she will need two iterations.
+For the given case, should I report a `required` error on the `itemInitial`? For the field to be required, `expose` must be `true`. But here we don't know whether user intended it to be `true` or `false`. Thus, we don't know if `itemInitial` is ought to be `required`.
+So, if `expose` is invalid or missing, we should report any errors regarding the other fields, except the `required` errors.
+
+#### Technicalities
+When data violates one of the schemas in `oneOf`, errors for every schema are generated.
+Let's consider the case of the product schema.
+1. case data: `{}`, `{expose: 5}`. Both these data will have:
+    1. `name`: `required`
+    2. `itemInitial`: `required`
+
+We've established, in [Which errors to report](#which-errors-to-report), that in a case like this, we don't want to report the `required` errors.
+2. Additionally, with `{expose: true, name: 'a name'}`, `expose` will still have an `enum` error, from the second schema in `oneOf`.
+
+3. `{expose: true, name: 5}`. This will have a `required` error for `itemInitial`.
+
+##### Some observations
+Both schemas are identical except of:
+1. the value of the `enum` keyword for `expose`; and
+2. the other fields being `required`
+
+So, whenever an error occurs, there will be identical errors for each of the schemas, except that
+1. there will be no `required` errors for the other fields (because of `2` from above) from the second schema and,
+2. if `expose` satisfies one of the schemas, there will be no `enum` error for that schema (because of `1` from above).
+
+##### Filtering out irrelevant errors
+[`filterErrors`](product-helpers.js#L23) adheres to these principles.
+
+1. *In case if `expose` is invalid or missing*: the `required` errors for the other fields are irrelevant - see [Which errors to report](#which-errors-to-report); all the other errors will be identical for each of the schemas -- so we can
+    1. ignore the `required` errors for the other fields and
+    2. arbitrarily pick any schema and ignore errors from all the other ones
+    3. additionally, we can ignore `enum` errors for `isInSale` (which is the only field these errors are possible for), because that keyword is used to make a logical distinction, based on which to choose schema, not to actually specify allowed values
+2. *If `expose` satisfies one of the schemas*, then the schema which doesn't have the `enum` error for `expose` is the appropriate schema.
 
 ## Client
 I [wrap](https://github.com/gottfried-github/e-commerce-api/tree/master/src/client) http requests to the api in a succint interface which can be used by a client application.
