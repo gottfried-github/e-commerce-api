@@ -22,7 +22,7 @@ The router uses [passport](http://www.passportjs.org/) which requires [express-s
 Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation
-Input validation is done [here](product-validate.js). 
+Input validation is done [here](/src/server/routes/admin/product-validate.js). 
 
 I implement validation using `json-schema` `oneOf` keyword: I apply different schemas for when `expose` is `true` and when it's `false` (see [Data structure](#data-structure) for the relationship between `expose` and other fields).
 
