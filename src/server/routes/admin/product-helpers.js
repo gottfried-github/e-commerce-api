@@ -1,132 +1,57 @@
-import * as m from '../../../../../fi-common/messages.js'
+import {traverseTree} from 'ajv-errors-to-data-tree/src/helpers.js'
 
-/**
- * @description deeply type-check the fields
-*/
-function ensureFields(body) {
-    const fields = productStripFields(body)
-    // const {expose, name, price, is_in_stock, photos_all, photos, cover_photo, description} = body
+function _parseFirstOneOfItemPath(schemaPath) {
+    const nodeNames = schemaPath.split('/')
+    if (0 === nodeNames[0].length) nodeNames.shift()
 
-    const errors = {errors: [], node: {}}
+    let oneOfI = null
 
-    if (undefined !== fields.expose && 'boolean' !== typeof fields.expose) errors.node.expose = {errors: [new TypeError("'isInSale' must be boolean")], node: null}
-    if (undefined !== fields.name && 'string' !== typeof fields.name) errors.node.name = {errors: [new TypeError("'name' must be a string")], node: null}
-    if (undefined !== fields.price && 'number' !== typeof fields.price) errors.node.price = {errors: [new TypeError("'price' must be a number")], node: null}
-    if (undefined !== fields.is_in_stock && 'boolean' !== typeof fields.is_in_stock) errors.node.is_in_stock = {errors: [new TypeError("'name' must be boolean")], node: null}
-    if (undefined !== fields.photos_all && !Array.isArray(fields.photos_all)) errors.node.photos = {errors: [new TypeError("'photos' must be an array")], node: null}
-    if (undefined !== fields.photos && !Array.isArray(fields.photos)) errors.node.photos = {errors: [new TypeError("'photos' must be an array")], node: null}
-    if (undefined !== fields.cover_photo && 'string' !== typeof fields.cover_photo) errors.node.coverPhoto = {errors: [new TypeError("'cover_photo' must be a string")], node: null}
-    if (undefined !== fields.description && 'string' !== typeof fields.description) errors.node.description = {errors: [new TypeError("'description' must be a string")], node: null}
-
-    if (Array.isArray(fields.photos)) {
-        for (const [i, photo] of fields.photos.entries()) {
-            if ("string" !== typeof photo) {
-                if (!errors.node.photos) {errors.node.photos = {errors: [], node: []}}
-                errors.node.photos.node.push({index: i, errors: [new TypeError("children of 'photos' must be strings")], node: null})
-            }
-        }
-    }
-    
-    if (Array.isArray(fields.photos_all)) {
-        for (const [i, photo] of fields.photos_all.entries()) {
-            if ("string" !== typeof photo) {
-                if (!errors.node.photos_all) {errors.node.photos_all = {errors: [], node: []}}
-                errors.node.photos_all.node.push({index: i, errors: [new TypeError("children of 'photos' must be strings")], node: null})
-            }
-        }
+    for (const [i, name] of nodeNames.entries()) {
+        if ('oneOf' === name) { oneOfI = i; break }
     }
 
-    if (Object.keys(errors.node).length) return {
-        fields: null, 
-        errors: m.ValidationError.create('some fields are filled incorrectly', errors)
-    }
+    if (null === oneOfI) return oneOfI
 
-    return {fields}
+    const oneOfPath = nodeNames.slice(0, oneOfI+2).reduce((str, nodeName, i) => {
+        str += `/${nodeName}`
+        return str
+    }, '')
+
+    return oneOfPath
 }
 
-/**
- * @returns error if `expose` isn't specified
- * @description `expose` is required when creating
-*/
-function ensureFieldsCreate(body, {ensureFields}) {
-    if (!('expose' in body)) return {
-        fields: null, 
-        errors: m.ValidationError.create('some fields are filled incorrectly', {
-            errors: [], node: {expose: {errors: [m.FieldMissing.create("'expose' must be specified")], node: null}}
+function filterErrors(errors) {
+    // 1, 1.2 in Filtering out irrelevant errors
+    const exposeErr = errors.node.expose?.errors.find(e => 'required' === e.data.keyword || 'type' === e.data.keyword)
+
+    if (exposeErr) {
+        traverseTree(errors, (e, fieldname) => {
+            // 1.1, 1.2, 1.3 in Filtering out irrelevant errors
+            if (_parseFirstOneOfItemPath(exposeErr.data.schemaPath) === _parseFirstOneOfItemPath(e.data.schemaPath) || 'required' === e.data.keyword && 'expose' !== fieldname || 'enum' === e.data.keyword) return null
         })
+
+        return
     }
 
-    return ensureFields(body)
+    // 2 in Filtering out irrelevant errors
+
+    const redundantSchemas = []
+
+    // store the schema of the 'enum' error
+    traverseTree(errors, (e) => {
+        if ('enum' === e.data.keyword) redundantSchemas.push(e.data.schemaPath)
+    })
+
+    const redundantOneOfSchemas = redundantSchemas.map(v => _parseFirstOneOfItemPath(v))
+
+    // console.log("filterErrors, redundantSchemas:", redundantSchemas, JSON.stringify(errors, null, 2));
+
+    // exclude the schemas that have the 'enum' error
+    traverseTree(errors, (e) => {
+        if (redundantOneOfSchemas.includes(_parseFirstOneOfItemPath(e.data.schemaPath))) return null
+    })
+
+    return
 }
 
-/**
- * body not empty
-*/
-function ensureFieldsUpdate(body, {ensureFields}) {
-    const fields = productStripFields(body)
-
-    if (!Object.keys(fields).length) return {
-        fields: null, 
-        errors: m.ValidationError.create('some fields are filled incorrectly', {
-            errors: [m.FieldMissing.create("at least one of the fields must be specified")], node: null
-        })
-    }
-
-    return ensureFields(body)
-}
-
-function makeEnsureFieldsCreate(ensureFields) {
-    return (req, res, next) => {
-        const _res = ensureFields(req.body)
-
-        if (!_res.fields) {
-            if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
-            return next(_res.errors)
-        }
-
-        req.body.fields = _res.fields
-        next()
-    }
-}
-
-function makeEnsureFieldsUpdate(ensureFields) {
-    return (req, res, next) => {
-        if (!req.body.write) {
-            req.body.write = null
-            return next()
-        }
-
-        const _res = ensureFields(req.body.write)
-        
-        if (!_res.fields) {
-            if (!_res.errors) return next(new Error("ensureFieldsCreate must return either fields or errors"))
-            return next(_res.errors)
-        }
-
-        req.body.write = _res.fields
-        next()
-    }
-}
-
-/**
- * get rid of additional fields
-*/
-function productStripFields(body) {
-    const _fields = {}
-
-    if ('expose' in body) _fields.expose = body.expose 
-    if ('name' in body) _fields.name = body.name 
-    if ('price' in body) _fields.price = body.price 
-    if ('is_in_stock' in body) _fields.is_in_stock = body.is_in_stock 
-    if ('photos' in body) _fields.photos = body.photos 
-    if ('cover_photo' in body) _fields.cover_photo = body.cover_photo 
-    if ('description' in body) _fields.description = body.description 
-
-    return _fields
-}
-
-export {
-    ensureFields,
-    ensureFieldsCreate, ensureFieldsUpdate,
-    makeEnsureFieldsCreate, makeEnsureFieldsUpdate,
-}
+export default filterErrors
