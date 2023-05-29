@@ -90,6 +90,9 @@ Whether all fields except `expose` are required depends on the value of `expose`
 ### `photos_all` and `photos`
 Product has `photos_all` and `photos` fields which are arrays of urls pointing to files on the server. The former represents all the photos that are uploaded to the server for the given product; the latter - the photos that are to be displayed to the visitor of the site.
 
+### The `time` field
+Time is stored in the format of the number of milliseconds since Unix time (Jan 1, 1970 UTC). Any time that's stored is to be treated as UTC time: if the client wants to display the corresponding local time, they should convert the time. Likewise, any local time should be converted to UTC before sending it for storage.
+
 ## Messages
 Messages represent the interface between the store and the api. They are abstracted away from the specifics of any particular database and describe what happens with records in general terms. 
 
