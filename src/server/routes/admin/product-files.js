@@ -6,6 +6,8 @@ import createError from 'http-errors'
 import express from 'express'
 import multer from 'multer'
 
+import * as m from '../../../../../fi-common/messages.js'
+
 /**
  * @param {String} paths.productUploadPath absolute path to uploads dir
  * @param {String} paths.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored
