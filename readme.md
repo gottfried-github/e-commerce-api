@@ -69,6 +69,9 @@ So, whenever an error occurs, there will be identical errors for each of the sch
     3. additionally, we can ignore `enum` errors for `isInSale` (which is the only field these errors are possible for), because that keyword is used to make a logical distinction, based on which to choose schema, not to actually specify allowed values
 2. *If `expose` satisfies one of the schemas*, then the schema which doesn't have the `enum` error for `expose` is the appropriate schema.
 
+#### Time range
+[A `Date` object can represent the range between approximately -8.6 and 8.6 quadrillion milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date). Hence, the range I specify for the `time` field: `86e14` and `-86e14`.
+
 ## Client
 I [wrap](https://github.com/gottfried-github/e-commerce-api/tree/master/src/client) http requests to the api in a succint interface which can be used by a client application.
 
