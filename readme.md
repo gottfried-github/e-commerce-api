@@ -96,6 +96,9 @@ Product has `photos_all` and `photos` fields which are arrays of urls pointing t
 ### The `time` field
 Time is stored in the format of the number of milliseconds since Unix time (Jan 1, 1970 UTC). Any time that's stored is to be treated as UTC time: if the client wants to display the corresponding local time, they should convert the time. Likewise, any local time should be converted to UTC before sending it for storage.
 
+#### Implementation note
+`node.js` mongoDB driver converts the `time` field into a javascript `Date` object and that gets converted into JSON as a timezone-free ISO string instead of the milliseconds number. To convert it back to the number would cost in performance so I leave it as is. This means that: the REST API specification for getting the product should specify the `time` field as a string instead of as a number; the client will receive the ISO string instead of a number.
+
 ### The `price` field
 The number, stored in the `price` field is meant to represent kopiykas. The maximum possible number of hryvnias shall be one trillion. This means that the maximum allowed number in the `price` field should be that times 100: `10e13`.
 
