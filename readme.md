@@ -69,6 +69,9 @@ So, whenever an error occurs, there will be identical errors for each of the sch
     3. additionally, we can ignore `enum` errors for `isInSale` (which is the only field these errors are possible for), because that keyword is used to make a logical distinction, based on which to choose schema, not to actually specify allowed values
 2. *If `expose` satisfies one of the schemas*, then the schema which doesn't have the `enum` error for `expose` is the appropriate schema.
 
+#### Time range
+[A `Date` object can represent the range between approximately -8.6 and 8.6 quadrillion milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date). Hence, the range I specify for the `time` field: `86e14` and `-86e14`.
+
 ## Client
 I [wrap](https://github.com/gottfried-github/e-commerce-api/tree/master/src/client) http requests to the api in a succint interface which can be used by a client application.
 
@@ -89,6 +92,15 @@ Whether all fields except `expose` are required depends on the value of `expose`
 
 ### `photos_all` and `photos`
 Product has `photos_all` and `photos` fields which are arrays of urls pointing to files on the server. The former represents all the photos that are uploaded to the server for the given product; the latter - the photos that are to be displayed to the visitor of the site.
+
+### The `time` field
+Time is stored in the format of the number of milliseconds since Unix time (Jan 1, 1970 UTC). Any time that's stored is to be treated as UTC time: if the client wants to display the corresponding local time, they should convert the time. Likewise, any local time should be converted to UTC before sending it for storage.
+
+#### Implementation note
+`node.js` mongoDB driver converts the `time` field into a javascript `Date` object and that gets converted into JSON as a timezone-free ISO string instead of the milliseconds number. To convert it back to the number would cost in performance so I leave it as is. This means that: the REST API specification for getting the product should specify the `time` field as a string instead of as a number; the client will receive the ISO string instead of a number.
+
+### The `price` field
+The number, stored in the `price` field is meant to represent kopiykas. The maximum possible number of hryvnias shall be one trillion. This means that the maximum allowed number in the `price` field should be that times 100: `10e13`.
 
 ## Messages
 Messages represent the interface between the store and the api. They are abstracted away from the specifics of any particular database and describe what happens with records in general terms. 
@@ -222,6 +234,7 @@ url: `POST /api/admin/product/create`
     photos?: Array,
     cover_photo?: String,
     description?: String,
+    time?: Number
 }
 ```
 
@@ -248,6 +261,7 @@ url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id
     photos?: Array,
     cover_photo?: String,
     description?: String,
+    time?: Number
 }
 ```
 
