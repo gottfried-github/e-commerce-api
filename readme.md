@@ -234,6 +234,7 @@ url: `POST /api/admin/product/create`
     photos?: Array,
     cover_photo?: String,
     description?: String,
+    time?: Number
 }
 ```
 
@@ -260,6 +261,7 @@ url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id
     photos?: Array,
     cover_photo?: String,
     description?: String,
+    time?: Number
 }
 ```
 
