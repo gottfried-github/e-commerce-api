@@ -1,8 +1,4 @@
-import * as auth from './auth.js'
-import * as user from './user.js'
-import * as product from './product.js'
+import admin from './admin/index.js'
+import visitor from './visitor/index.js'
 
-export default {
-    auth, user, 
-    product
-}
+export default {admin, visitor}
