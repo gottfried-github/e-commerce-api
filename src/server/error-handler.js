@@ -4,7 +4,7 @@ import * as m from '../../../fi-common/messages.js'
 function _errorHandler(e, req, res, next) {
     if (!e) return next()
 
-    // console.log('errorHandler, e:', e);
+    console.log('errorHandler, e:', e);
     
     if (e instanceof m.Message) {
         if (m.ValidationError.code === e.code || m.InvalidCriterion.code === e.code) return res.status(400).json(e)
