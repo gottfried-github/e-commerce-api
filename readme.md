@@ -217,11 +217,28 @@ See [`body-parser` docs](http://expressjs.com/en/resources/middleware/body-parse
 }
 ```
 
-### Product
-#### create
+### Visitor
+#### Product
+##### get many
+url: `POST /api/product/get-many`
+
+###### request
+* Content-Type: `application/json`
+* Body: 
+```json
+{
+    name: String,
+    dir: Number,
+    inStock: Boolean
+}
+```
+
+### Admin
+#### Product
+##### create
 url: `POST /api/admin/product/create`
 
-##### request
+###### request
 * Content-Type: `application/json`
 * body: 
 ```json
@@ -238,17 +255,17 @@ url: `POST /api/admin/product/create`
 }
 ```
 
-##### response
+###### response
 * success
     * status: `201`
     * body: the created document's id
 * invalid data (no `expose` field, improper types or `ValidationError` on behalf of the store)
     * as described in [Bad Input](#bad-input)
 
-#### update
+##### update
 url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id`)
 
-##### request
+###### request
 * Content-Type: `application/json`,
 * body: 
 ```json
@@ -267,7 +284,7 @@ url: `POST /api/admin/product/update:id` (e.g.: `/api/admin/product/update/an-id
 
 Note: at least one field in fields must be specified.
 
-##### response
+###### response
 * success
     * status: `200`,
     * body: the updated document
@@ -279,14 +296,14 @@ Note: at least one field in fields must be specified.
 * `InvalidCriterion` on behalf of the store
     * as described in [Invalid criterion](#invalid-criterion)
 
-### Signup
+#### Signup
 url: `POST /api/admin/auth/signup`
 
-#### request
+##### request
 * Content-Type: `application/x-www-form-urlencoded`,
 * body: `name=String&password=String`
 
-#### response
+##### response
 * success
     * status: `201`
     * body: 
@@ -296,14 +313,14 @@ url: `POST /api/admin/auth/signup`
 * user name exists
     * as described in [Resource exists](#resource-exists)
 
-### Login
+#### Login
 url: `POST /api/admin/auth/login`
 
-#### request
+##### request
 * Content-Type: `application/x-www-form-urlencoded`,
 * body: `name=String&password=String`
 
-#### response
+##### response
 * success
     status: `200`
     body: 

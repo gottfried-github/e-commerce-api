@@ -3,6 +3,7 @@ import {Router} from 'express'
 import {log, logger} from './logger.js'
 
 import admin from './routes/admin/admin.js'
+import visitor from './routes/visitor/visitor.js'
 
 function api(store, options) {
     const router = Router()
@@ -14,6 +15,7 @@ function api(store, options) {
     })
 
     router.use('/admin', admin(store, options))
+    router.use(visitor(store))
 
     return router
 }
