@@ -75,7 +75,8 @@ function product(storeProduct, storePhoto, options) {
         let products = null
 
         try {
-            products = await storeProduct.getMany()
+            // see Products view in product spec
+            products = await storeProduct.getMany(null, null, [{name: 'time', dir: -1}])
         } catch(e) {
             return next(e)
         }
