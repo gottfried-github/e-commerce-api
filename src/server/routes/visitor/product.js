@@ -20,7 +20,7 @@ function product(storeProduct) {
             return next()
         }, 
         async (req, res, next) => {
-            if (!SORT_ORDER.map(i => i.name).slice(1).indexOf(req.body.name)) throw new Error('sortField must match one of the following fields: time, price, name')
+            if (SORT_ORDER.map(i => i.name).slice(1).indexOf(req.body.name) < 0) throw new Error('sortField must match one of the following fields: time, price, name')
 
             /* see Sorting in product spec */ 
             const sortOrder = [...SORT_ORDER]
