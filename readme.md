@@ -296,6 +296,29 @@ Note: at least one field in fields must be specified.
 * `InvalidCriterion` on behalf of the store
     * as described in [Invalid criterion](#invalid-criterion)
 
+##### upload photos
+url: `POST /api/admin/product/photos/upload`
+
+###### request
+* Content-Type: `multipart/form-data`
+* body: multipart form data containing the files to upload and an `id` field (the id of the product to add the uploaded photos to), preceeding the files
+
+###### response
+* success
+    * status: `201`
+    * body: the document to which the photos were added
+* no id field or id field doesn't preceede files
+    * status: `400`
+    * body: an `httpError`
+* photos uploaded but no document matching given id
+    * status: `400`
+    * body: 
+    ```json
+    {
+        message: "<a message>"
+    }
+    ```
+
 #### Signup
 url: `POST /api/admin/auth/signup`
 
