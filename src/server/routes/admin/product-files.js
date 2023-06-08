@@ -61,7 +61,14 @@ function main(storePhoto, storeProduct, paths) {
 
         if (null === _resProduct) return res.status(400).json({message: 'photos saved but no document matched id'})
 
-        res.status(201).json({message: 'successfully uploaded the photos'})
+        // get the product to send to the client
+        try {
+            _resProduct = await storeProduct.getById(req.body.id)
+        } catch(e) {
+            return next(e)
+        }
+
+        res.status(201).json(_resProduct)
     })
 
     return {router}
