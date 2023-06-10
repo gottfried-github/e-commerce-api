@@ -11,6 +11,19 @@ const SORT_ORDER = [{name: 'is_in_stock', dir: -1}, {name: 'time', dir: -1}, {na
 function product(storeProduct) {
     const router = Router()
 
+    router.get('/:id', async (req, res, next) => {
+        // console.log('/api/admin/product/, req.query:', req.query);
+        let _product = null
+        try {
+            _product = await storeProduct.getById(req.params.id)
+        } catch(e) {
+            return next(e)
+        }
+
+        if (null === _product) return res.status(404).json({message: "document not found"})
+        res.json(_product)
+    })
+
     router.post('/get-many', bodyParser.json(), 
         // validate
         (req, res, next) => {
