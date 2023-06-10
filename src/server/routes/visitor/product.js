@@ -20,12 +20,14 @@ function product(storeProduct) {
             return next()
         }, 
         async (req, res, next) => {
-            if (!SORT_ORDER.map(i => i.name).slice(1).indexOf(req.body.name)) throw new Error('sortField must match one of the following fields: time, price, name')
+            if (SORT_ORDER.map(i => i.name).slice(1).indexOf(req.body.name) < 0) throw new Error('sortField must match one of the following fields: time, price, name')
 
             /* see Sorting in product spec */ 
             const sortOrder = [...SORT_ORDER]
-            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(req.body.name), 1)
-            sortOrder.unshift({...sortFieldDefault, dir: req.body.dir})
+            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(req.body.name), 1)[0]
+            
+            // keep 'is_in_stock' first, second put sortFieldDefault
+            sortOrder.splice(1, 0, {...sortFieldDefault, dir: req.body.dir})
 
             let products = null
 
