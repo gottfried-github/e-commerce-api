@@ -24,8 +24,10 @@ function product(storeProduct) {
 
             /* see Sorting in product spec */ 
             const sortOrder = [...SORT_ORDER]
-            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(req.body.name), 1)
-            sortOrder.unshift({...sortFieldDefault, dir: req.body.dir})
+            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(req.body.name), 1)[0]
+            
+            // keep 'is_in_stock' first, second put sortFieldDefault
+            sortOrder.splice(1, 0, {...sortFieldDefault, dir: req.body.dir})
 
             let products = null
 
