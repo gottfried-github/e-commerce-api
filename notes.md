@@ -1,2 +1,0 @@
-# `product-validate`
-Currently, if `ajv` validator produces an `additinalProperties` error, [the `validate` method throws an error](https://github.com/gottfried-github/e-commerce-api/blob/master/src/server/routes/admin/product-validate.js#L50), which results in `500` error on the client. But this should clearly be a `400` error, because this is a validation error.

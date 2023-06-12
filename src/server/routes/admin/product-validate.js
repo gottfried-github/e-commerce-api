@@ -47,9 +47,6 @@ function validate(fields) {
     if (_validate(fields)) return false
 
     const errors = toTree(_validate.errors, (e) => {
-        // see Which errors should not occur in the data
-        if ('additionalProperties' === e.keyword) throw new Error("data contains fields, not defined in the spec")
-
         if ('required' === e.keyword) return m.FieldMissing.create(e.message, e)
         if ('type' === e.keyword) return m.TypeErrorMsg.create(e.message, e)
 
