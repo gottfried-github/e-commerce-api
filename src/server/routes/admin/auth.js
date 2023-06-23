@@ -62,4 +62,4 @@ function auth(auth) {
     return {router}
 }
 
-export {auth, authenticate, signup}
+export {auth, authenticate}

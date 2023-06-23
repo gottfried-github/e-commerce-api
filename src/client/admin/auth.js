@@ -46,4 +46,4 @@ async function isAuthenticated(successCb, failureCb) {
     return successCb(body, res)
 }
 
-export {login, signup, isAuthenticated}
+export {login, isAuthenticated}
