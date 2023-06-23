@@ -28,26 +28,26 @@ const _validatePsswd = ajv.compile({
     maxLength: 150
 })
 
-function validatePsswd(psswd) {
-    _validatePsswd(psswd)
+// function validatePsswd(psswd) {
+//     _validatePsswd(psswd)
 
-    if (_validatePsswd.errors) return m.ValidationError.create("password is invalid", {errors: [], node: {
-        password: toTree(_validatePsswd.errors, (e) => {
-            if ('type' === e.keyword) return m.TypeErrorMsg.create(e.message, e)
-            if (!['minLength', 'maxLength'].includes(e.keyword)) throw new Error(`Ajv produced unpredictable error: ${e.keyword}`)
+//     if (_validatePsswd.errors) return m.ValidationError.create("password is invalid", {errors: [], node: {
+//         password: toTree(_validatePsswd.errors, (e) => {
+//             if ('type' === e.keyword) return m.TypeErrorMsg.create(e.message, e)
+//             if (!['minLength', 'maxLength'].includes(e.keyword)) throw new Error(`Ajv produced unpredictable error: ${e.keyword}`)
     
-            return m.ValidationError.create(e.message, e)
-        })
-    }})
+//             return m.ValidationError.create(e.message, e)
+//         })
+//     }})
 
-    if (psswd.normalize() !== psswd) return m.ValidationError.create("password is invalid", {errors: [], node: {
-        password: {
-            errors: [m.ValidationError.create('normalized version of password differs from original')],
-            node: null
-        }
-    }})
+//     if (psswd.normalize() !== psswd) return m.ValidationError.create("password is invalid", {errors: [], node: {
+//         password: {
+//             errors: [m.ValidationError.create('normalized version of password differs from original')],
+//             node: null
+//         }
+//     }})
 
-    return null
-}
+//     return null
+// }
 
-export {ensureCredentials, validatePsswd}
+export {ensureCredentials}

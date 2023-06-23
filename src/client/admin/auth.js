@@ -1,22 +1,22 @@
-async function signup(name, password, successCb, failureCb) {
-    const _body = new URLSearchParams()
-    _body.append('name', name)
-    _body.append('password', password)
+// async function signup(name, password, successCb, failureCb) {
+//     const _body = new URLSearchParams()
+//     _body.append('name', name)
+//     _body.append('password', password)
 
-    const req = new Request('/api/admin/auth/signup', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: _body.toString()
-    })
+//     const req = new Request('/api/admin/auth/signup', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded'
+//         },
+//         body: _body.toString()
+//     })
 
-    const res = await fetch(req)
-    const body = await res.json()
+//     const res = await fetch(req)
+//     const body = await res.json()
 
-    if (!res.ok && failureCb) return failureCb(body, res)
-    return successCb(body, res, name, password)
-}
+//     if (!res.ok && failureCb) return failureCb(body, res)
+//     return successCb(body, res, name, password)
+// }
 
 async function login(name, password, successCb, failureCb) {
     const _body = new URLSearchParams()
@@ -46,4 +46,4 @@ async function isAuthenticated(successCb, failureCb) {
     return successCb(body, res)
 }
 
-export {login, signup, isAuthenticated}
+export {login, isAuthenticated}

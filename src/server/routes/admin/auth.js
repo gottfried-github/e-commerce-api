@@ -4,7 +4,7 @@ import {Router} from 'express'
 import {log, logger} from '../../logger.js'
 import * as m from '../../../../../fi-common/messages.js'
 
-import {ensureCredentials, validatePsswd} from './auth-validate.js'
+import {ensureCredentials} from './auth-validate.js'
 
 function authenticate(req, res, next, {authenticate}) {
     return authenticate(req, res, next).then(_res => {
@@ -25,34 +25,34 @@ function authenticate(req, res, next, {authenticate}) {
     })
 }
 
-function signup(req, res, next, {signup}) {
-    return signup(req, res, next).then(_res => {
-        req.log('signupMiddleware, signup resolved, _res:', _res)
+// function signup(req, res, next, {signup}) {
+//     return signup(req, res, next).then(_res => {
+//         req.log('signupMiddleware, signup resolved, _res:', _res)
 
-        if (true !== _res) return next(_res)
+//         if (true !== _res) return next(_res)
 
-        return res.status(201).json({})
-    }).catch(e => {
-        req.log('signupMiddleware, signup rejected, e:', e)
+//         return res.status(201).json({})
+//     }).catch(e => {
+//         req.log('signupMiddleware, signup rejected, e:', e)
 
-        next(e)
-    })
-}
+//         next(e)
+//     })
+// }
 
 function auth(auth) {
     const router = Router()
 
     router.post('/login', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {authenticate(req, res, next, {authenticate: auth.authenticate})})
-    router.post('/signup', bodyParser.urlencoded(), ensureCredentials, 
-        // validate password
-        (req, res, next) => {
-            const errors = validatePsswd(req.body.password)
-            if (errors) return next(errors)
+    // router.post('/signup', bodyParser.urlencoded(), ensureCredentials, 
+    //     // validate password
+    //     (req, res, next) => {
+    //         const errors = validatePsswd(req.body.password)
+    //         if (errors) return next(errors)
 
-            next()
-        }, 
-        (req, res, next) => {signup(req, res, next, {signup: auth.signup})}
-    )
+    //         next()
+    //     }, 
+    //     (req, res, next) => {signup(req, res, next, {signup: auth.signup})}
+    // )
     
     router.get('/is-authenticated', (req, res) => {
         req.log('/api/admin/auth/is-authenticated, req.user:', req.user)
@@ -62,4 +62,4 @@ function auth(auth) {
     return {router}
 }
 
-export {auth, authenticate, signup}
+export {auth, authenticate}

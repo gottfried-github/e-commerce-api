@@ -38,26 +38,26 @@ function auth(store) {
         })
     }
     
-    async function signup(req, res, next) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                validateCredentials(req.body.name, req.body.password)
-            } catch (e) {
-                return reject(e)
-            }
+    // async function signup(req, res, next) {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+    //             validateCredentials(req.body.name, req.body.password)
+    //         } catch (e) {
+    //             return reject(e)
+    //         }
     
-            try {
-                await store.create({name: req.body.name, password: req.body.password})
-            } catch(e) {
-                req.log('/signup, createUser throws:', e)
-                return reject(e)
-            }
+    //         try {
+    //             await store.create({name: req.body.name, password: req.body.password})
+    //         } catch(e) {
+    //             req.log('/signup, createUser throws:', e)
+    //             return reject(e)
+    //         }
     
-            return resolve(true)
-        })
-    }
+    //         return resolve(true)
+    //     })
+    // }
 
-    return {authenticate, signup}
+    return {authenticate}
 }
 
 export default auth
