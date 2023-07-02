@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
 
-import * as m from '../../../../../fi-common/messages.js'
+import * as m from '../../../../../e-commerce-common/messages.js'
 
 import validate from './product-validate.js'
 import files from './product-files.js'

@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import {toTree} from 'ajv-errors-to-data-tree'
 
-import * as m from '../../../../../fi-common/messages.js'
+import * as m from '../../../../../e-commerce-common/messages.js'
 
 import filterErrors from './product-helpers.js'
 

@@ -6,7 +6,7 @@ import createError from 'http-errors'
 import express from 'express'
 import multer from 'multer'
 
-import * as m from '../../../../../fi-common/messages.js'
+import * as m from '../../../../../e-commerce-common/messages.js'
 
 /**
  * @param {String} paths.productUploadPath absolute path to uploads dir

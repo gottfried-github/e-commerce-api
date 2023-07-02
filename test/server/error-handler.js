@@ -1,6 +1,6 @@
 import {assert} from 'chai'
 import createError from 'http-errors'
-import * as m from '../../../fi-common/messages.js'
+import * as m from '../../../e-commerce-common/messages.js'
 
 import {Req, Res} from './mocks.js'
 
