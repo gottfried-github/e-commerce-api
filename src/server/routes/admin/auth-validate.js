@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 import {toTree} from 'ajv-errors-to-data-tree'
-import * as m from "../../../../../fi-common/messages.js"
+import * as m from "../../../../../e-commerce-common/messages.js"
 
 // 1 in 'Function'/'inward'
 function ensureCredentials(req, res, next) {
