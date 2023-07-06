@@ -12,7 +12,7 @@ function setup(store) {
             user = await store.getByName(name, password)
         } catch(e) {
 
-            if (m.InvalidCriterion.code === e.code) return cb(m.InvalidCriterion('password is incorrect'))
+            if (m.InvalidCriterion.code === e.code) return cb(m.InvalidCriterion.create('password is incorrect'))
             
             // this should call the callback to passport.authenticate with the error (as in 1. of `what happens during requests`)
             return cb(e)
