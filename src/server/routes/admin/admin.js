@@ -7,7 +7,7 @@ import {auth} from './auth.js'
 import product from './product.js'
 import user from './user.js'
 
-import {errorHandler} from '../../error-handler.js'
+import {errorHandler} from '../../middleware/error-handler.js'
 
 function admin(store, options) {
     const router = Router()

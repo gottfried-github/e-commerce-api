@@ -8,33 +8,15 @@ import multer from 'multer'
 
 import * as m from '../../../../../e-commerce-common/messages.js'
 
-/**
- * @param {String} paths.productUploadPath absolute path to uploads dir
- * @param {String} paths.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored
-*/
-function main(storePhoto, storeProduct, paths) {
-    const upload = multer({storage: multer.diskStorage({
-        destination: async (req, file, cb) => {
-            if (!req.body?.id) return cb(createError(400, "'id' field must precede 'files' in the formdata"))
-            const dirPath = path.join(paths.productUploadPath, req.body.id)
-
-            await fs.mkdir(dirPath, {recursive: true})
-
-            cb(null, dirPath)
-        },
-        filename: (req, file, cb) => {
-            cb(null, `${Date.now().toString()}${path.extname(file.originalname)}`)
-        }
-    })}).array('files', 200)
-
+function main(services, middleware) {
     const router = express.Router()
 
-    router.post('/upload', upload, async (req, res, next) => {
+    router.post('/upload', middleware.files, async (req, res, next) => {
         let _resPhotos = null
         
         // write to Photo
         try {
-            _resPhotos = await storePhoto.createMany(req.files.map(file => {
+            _resPhotos = await services.storePhoto.createMany(req.files.map(file => {
                 return {path: path.join('/', path.relative(paths.productDiffPath, file.path))}
             }))
         } catch(e) {
@@ -54,7 +36,7 @@ function main(storePhoto, storeProduct, paths) {
 
         // write to the product
         try {
-            _resProduct = await storeProduct.updatePhotos(req.body.id, _resPhotos)
+            _resProduct = await services.storeProduct.updatePhotos(req.body.id, _resPhotos)
         } catch(e) {
             return next(e)
         }
@@ -63,7 +45,7 @@ function main(storePhoto, storeProduct, paths) {
 
         // get the product to send to the client
         try {
-            _resProduct = await storeProduct.getById(req.body.id)
+            _resProduct = await services.storeProduct.getById(req.body.id)
         } catch(e) {
             return next(e)
         }

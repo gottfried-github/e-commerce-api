@@ -4,7 +4,7 @@ import {Router} from 'express'
 import {log, logger} from '../../logger.js'
 import * as m from '../../../../../e-commerce-common/messages.js'
 
-import {ensureCredentials} from './auth-validate.js'
+import {ensureCredentials} from '../../middleware/admin/auth-validate.js'
 
 function authenticate(req, res, next, {authenticate}) {
     return authenticate(req, res, next).then(_res => {

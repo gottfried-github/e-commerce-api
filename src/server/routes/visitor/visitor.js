@@ -2,7 +2,7 @@ import {Router} from 'express'
 
 import product from './product.js'
 
-import {errorHandler} from '../../error-handler.js'
+import {errorHandler} from '../../middleware/error-handler.js'
 
 function visitor(store) {
     const router = Router()
