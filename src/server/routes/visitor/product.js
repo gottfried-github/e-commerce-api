@@ -3,7 +3,7 @@ import {Router} from 'express'
 
 import * as m from '../../../../../e-commerce-common/messages.js'
 
-import validate from './product-validate.js'
+import validate from '../../middleware/visitor/product-validate.js'
 
 // see Sorting in product spec
 const SORT_ORDER = [{name: 'is_in_stock', dir: -1}, {name: 'time', dir: -1}, {name: 'price', dir: 1}, {name: 'name', dir: 1}]
@@ -24,14 +24,7 @@ function product(storeProduct) {
         res.json(_product)
     })
 
-    router.post('/get-many', bodyParser.json(), 
-        // validate
-        (req, res, next) => {
-            const errors = validate(req.body)
-            if (errors) return next(m.ValidationError.create("some fields are filled incorrectly", errors))
-
-            return next()
-        }, 
+    router.post('/get-many', bodyParser.json(), validate,
         async (req, res, next) => {
             if (SORT_ORDER.map(i => i.name).slice(1).indexOf(req.body.name) < 0) throw new Error('sortField must match one of the following fields: time, price, name')
 
