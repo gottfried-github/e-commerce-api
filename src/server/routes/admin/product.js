@@ -16,7 +16,7 @@ function product(services, middleware) {
 
             let id = null
             try {
-                id = await services.storeProduct.create(req.body)
+                id = await services.create(req.body)
             } catch(e) {
                 return next(e)
             }
@@ -33,15 +33,7 @@ function product(services, middleware) {
             let _res = null
 
             try {
-                _res = await services.storeProduct.update(req.params.id, {write: req.body.write || null, remove: req.body.remove || null})
-            } catch (e) {
-                return next(e)
-            }
-
-            let doc = null
-
-            try {
-                doc = await services.storeProduct.getById(req.params.id)
+                _res = await services.update(req.params.id, req.body)
             } catch (e) {
                 return next(e)
             }
@@ -58,8 +50,7 @@ function product(services, middleware) {
         let products = null
 
         try {
-            // see Products view in product spec
-            products = await services.storeProduct.getMany(null, null, [{name: 'time', dir: -1}])
+            products = await services.getMany()
         } catch(e) {
             return next(e)
         }
@@ -72,7 +63,7 @@ function product(services, middleware) {
         // console.log('/api/admin/product/, req.query:', req.query);
         let _product = null
         try {
-            _product = await services.storeProduct.getById(req.params.id)
+            _product = await services.getById(req.params.id)
         } catch(e) {
             return next(e)
         }
