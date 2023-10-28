@@ -32,10 +32,10 @@ function admin(services, middleware, options) {
     })
 
     router.use('/product', product(services.product, {product: middleware.product, files: middleware.files}).router)
-    router.use('/user', user(store.auth).router)
+    router.use('/user', user().router)
 
     /* central error handling */
-    router.use(errorHandler)
+    router.use(middleware.errorHandler)
 
     return router
 }
