@@ -16,9 +16,7 @@ function main(services, middleware) {
         
         // write to Photo
         try {
-            _resPhotos = await services.storePhoto.createMany(req.files.map(file => {
-                return {path: path.join('/', path.relative(paths.productDiffPath, file.path))}
-            }))
+            _resPhotos = await services.storePhoto.createMany(req.filesPublic)
         } catch(e) {
             if (m.ValidationError.code === e.code) {
 

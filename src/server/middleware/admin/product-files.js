@@ -3,7 +3,7 @@
  * @param {String} options.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored
 */
 function main(options) {
-    return multer({storage: multer.diskStorage({
+    const multerMiddleware = multer({storage: multer.diskStorage({
         destination: async (req, file, cb) => {
             if (!req.body?.id) return cb(createError(400, "'id' field must precede 'files' in the formdata"))
             const dirPath = path.join(options.productUploadPath, req.body.id)
@@ -16,6 +16,16 @@ function main(options) {
             cb(null, `${Date.now().toString()}${path.extname(file.originalname)}`)
         }
     })}).array('files', 200)
+
+    const pathsTransformMiddleware = (req, res, next) => {
+        req.filesPublic = req.files.map(file => {
+            return {path: path.join('/', path.relative(options.productDiffPath, file.path))}
+        })
+
+        next()
+    }
+
+    return [multerMiddleware, pathsTransformMiddleware]
 }
 
 export default main
