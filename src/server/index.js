@@ -7,4 +7,8 @@ function main(store, options) {
     const middleware = middleware(services, options)
 
     const router = routes(services, middleware)
+
+    return router
 }
+
+export default main

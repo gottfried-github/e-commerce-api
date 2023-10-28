@@ -7,7 +7,7 @@ function main(store) {
             return store.getById(id)
         },
 
-        getMany(expose, inStock, sortField) {
+        getMany(inStock, sortField) {
             if (SORT_ORDER.map(i => i.name).slice(1).indexOf(sortField) < 0) throw new Error('sortField must match one of the following fields: time, price, name')
 
             /* see Sorting in product spec */ 

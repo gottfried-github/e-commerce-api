@@ -5,7 +5,7 @@ import {log, logger} from './logger.js'
 import admin from './routes/admin/admin.js'
 import visitor from './routes/visitor/visitor.js'
 
-function api(store, options) {
+function api(services, middleware, options) {
     const router = Router()
 
     /* attach logger to express */
@@ -14,8 +14,8 @@ function api(store, options) {
         next()
     })
 
-    router.use('/admin', admin(store, options))
-    router.use(visitor(store))
+    router.use('/admin', admin(services.admin, {...middleware.admin, ...middleware.common}, options))
+    router.use(visitor(services.visitor, {...middleware.visitor, ...middleware.common}))
 
     return router
 }
