@@ -8,4 +8,4 @@ function validate(req, res, next) {
     return next()
 }
 
-export default validate
+export default () => validate

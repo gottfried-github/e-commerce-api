@@ -18,4 +18,4 @@ function update(req, res, next) {
     return next()
 }
 
-export default {validateCreate: create, validateUpdate: update}
+export default () => ({validateCreate: create, validateUpdate: update})
