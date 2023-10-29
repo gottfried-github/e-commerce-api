@@ -9,7 +9,7 @@ import {validateCredentials} from './auth-helpers.js'
 // import {create, getByName, getById, isCorrectPassword} from 'bazar-user-mongo'
 
 function auth(services) {
-    setup(services.store)
+    setup(services)
 
     function authenticate(req, res, next) {
         return new Promise(async (resolve, reject) => {
@@ -57,7 +57,7 @@ function auth(services) {
     //     })
     // }
 
-    return {authenticate}
+    return authenticate
 }
 
 export default auth

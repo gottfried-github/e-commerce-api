@@ -1,3 +1,5 @@
+import createError from 'http-errors'
+
 /**
  * @param {String} options.productUploadPath absolute path to uploads dir
  * @param {String} options.productDiffPath absolute path relative to which actual pathname of each uploaded file should be stored

@@ -1,4 +1,4 @@
-import _validate from './product-validate-core.js'
+import _validate from './product-validate-lib.js'
 
 function create(req, res, next) {
     const errors = _validate(req.body)

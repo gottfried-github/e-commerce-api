@@ -42,7 +42,7 @@ function authenticate(req, res, next, {authenticate}) {
 function auth(services, middleware) {
     const router = Router()
 
-    router.post('/login', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {authenticate(req, res, next, {authenticate: middleware.authenticate})})
+    router.post('/login', bodyParser.urlencoded(), middleware.auth.validate, (req, res, next) => {authenticate(req, res, next, {authenticate: middleware.auth.auth})})
     // router.post('/signup', bodyParser.urlencoded(), ensureCredentials, 
     //     // validate password
     //     (req, res, next) => {
