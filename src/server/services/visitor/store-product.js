@@ -21,3 +21,5 @@ function main(store) {
         }
     }
 }
+
+export default main
