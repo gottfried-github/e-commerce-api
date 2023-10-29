@@ -1,4 +1,5 @@
 import createError from 'http-errors'
+import multer from 'multer'
 
 /**
  * @param {String} options.productUploadPath absolute path to uploads dir

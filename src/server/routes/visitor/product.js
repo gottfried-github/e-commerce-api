@@ -19,7 +19,7 @@ function product(services, middleware) {
         res.json(_product)
     })
 
-    router.post('/get-many', bodyParser.json(), middleware.product.validateGetMany,
+    router.post('/get-many', bodyParser.json(), middleware.validateGetMany,
         async (req, res, next) => {
             let products = null
 

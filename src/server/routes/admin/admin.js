@@ -1,13 +1,9 @@
 import {Router} from 'express'
 import passport from 'passport'
 
-import authService from '../../services/auth.js'
-
 import {auth} from './auth.js'
 import product from './product.js'
 import user from './user.js'
-
-import {errorHandler} from '../../middleware/error-handler.js'
 
 function admin(services, middleware, options) {
     const router = Router()

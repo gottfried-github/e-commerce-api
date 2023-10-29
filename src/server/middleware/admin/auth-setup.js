@@ -1,7 +1,7 @@
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
-import {logger, log} from '../logger.js'
-import * as m from '../../../../e-commerce-common/messages.js'
+import {logger, log} from '../../logger.js'
+import * as m from '../../../../../e-commerce-common/messages.js'
 
 function setup(store) {
     async function local(name, password, cb) {

@@ -4,7 +4,7 @@ import errorHandler from './error-handler.js'
 
 function main(services, options) {
     return {
-        admin: admin(services, options),
+        admin: admin(services.admin, options),
         visitor: visitor(),
         common: {errorHandler: errorHandler()}
     }

@@ -3,7 +3,6 @@ import {fileURLToPath} from 'url'
 import fs from 'fs/promises'
 
 import express from 'express'
-import multer from 'multer'
 
 import * as m from '../../../../../e-commerce-common/messages.js'
 

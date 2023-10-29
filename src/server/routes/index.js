@@ -1,9 +1,9 @@
 import {Router} from 'express'
 
-import {log, logger} from './logger.js'
+import {log, logger} from '../logger.js'
 
-import admin from './routes/admin/admin.js'
-import visitor from './routes/visitor/visitor.js'
+import admin from './admin/admin.js'
+import visitor from './visitor/visitor.js'
 
 function main(services, middleware, options) {
     const router = Router()
@@ -13,6 +13,8 @@ function main(services, middleware, options) {
         req.log = log.bind(logger)
         next()
     })
+
+    console.log("routes, index - middleware:", middleware)
 
     router.use('/admin', admin(services.admin, {...middleware.admin, ...middleware.common}, options))
     router.use(visitor(services.visitor, {...middleware.visitor, ...middleware.common}))
