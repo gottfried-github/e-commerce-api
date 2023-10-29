@@ -6,7 +6,7 @@ function main(services, options) {
     return {
         admin: admin(services, options),
         visitor: visitor(),
-        common: {errorHandler}
+        common: {errorHandler: errorHandler()}
     }
 }
 

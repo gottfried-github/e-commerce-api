@@ -29,4 +29,9 @@ function errorHandler(e, req, res, next) {
     return _errorHandler(e, req, res, next)
 }
 
-export {_errorHandler, errorHandler}
+function errorHandlerFactory() {
+    return errorHandler
+}
+
+export {errorHandlerFactory as default, _errorHandler}
+
