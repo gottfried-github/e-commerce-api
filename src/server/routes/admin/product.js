@@ -38,7 +38,7 @@ function product(services, middleware) {
                 return next(e)
             }
 
-            res.status(200).json(doc)
+            res.status(200).json(_res)
         }
     )
 
