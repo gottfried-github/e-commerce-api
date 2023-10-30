@@ -24,7 +24,7 @@ function product(services, middleware) {
             let products = null
 
             try {
-                products = await storeProduct.getMany(req.body.inStock, req.body.name)
+                products = await services.getMany(req.body.inStock, req.body.dir, req.body.name)
             } catch(e) {
                 return next(e)
             }

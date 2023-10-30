@@ -4,18 +4,18 @@ function main(store) {
 
     return {
         getById(id) {
-            return store.getById(id)
+            return store.product.getById(id)
         },
 
-        getMany(inStock, sortField) {
+        getMany(inStock, dir, sortField) {
             if (SORT_ORDER.map(i => i.name).slice(1).indexOf(sortField) < 0) throw new Error('sortField must match one of the following fields: time, price, name')
 
             /* see Sorting in product spec */ 
             const sortOrder = [...SORT_ORDER]
-            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(req.body.name), 1)[0]
+            const sortFieldDefault = sortOrder.splice(SORT_ORDER.map(i => i.name).indexOf(sortField), 1)[0]
             
             // keep 'is_in_stock' first, second put sortFieldDefault
-            sortOrder.splice(1, 0, {...sortFieldDefault, dir: req.body.dir})
+            sortOrder.splice(1, 0, {...sortFieldDefault, dir: dir})
 
             return store.product.getMany(true, inStock ? true : null, sortOrder)
         }
