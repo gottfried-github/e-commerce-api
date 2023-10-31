@@ -107,7 +107,7 @@ function _test(tests) {
 
     tests.nameTypeOthersRequired.forEach(t => {
         describe(t.description || "", () => {
-            it("contains ONLY a 'type' error for name and a 'required' error for price", () => {
+            it("contains ONLY a 'type' error for name and a 'required' error for the other fields", () => {
                 const errors = t.o(...t.i)
 
                 const keys = Object.keys(errors.node)
