@@ -2,14 +2,14 @@ import {assert} from 'chai'
 import * as m from '../../../e-commerce-common/messages.js'
 import {Req, Res} from './mocks.js'
 
-import {authenticate, signup} from '../../src/server/routes/admin/auth.js'
+import {authenticate} from '../../src/server/routes/admin/auth.js'
 
 function testRoutes() {
     describe("dep resolves with InvalidCriterion", () => {
         it("calls 'next' with the message", async () => {
             let isEqual = false
             
-            await authenticate(new Req(), new Res((_status) => {status = _status}), (msg) => {isEqual = m.InvalidCriterion.code === msg.code}, {authenticate: (req, res, next) => {
+            await authenticate(new Req(), new Res((_status) => {}), (msg) => {isEqual = m.InvalidCriterion.code === msg.code}, {authenticate: (req, res, next) => {
                 return Promise.resolve(m.InvalidCriterion.create('message'))
             }})
 

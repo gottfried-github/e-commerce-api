@@ -1,15 +1,11 @@
 import {Router} from 'express'
 import passport from 'passport'
 
-import authService from '../../services/auth.js'
-
 import {auth} from './auth.js'
 import product from './product.js'
 import user from './user.js'
 
-import {errorHandler} from '../../error-handler.js'
-
-function admin(store, options) {
+function admin(services, middleware, options) {
     const router = Router()
 
     /* setup passport */
@@ -17,7 +13,7 @@ function admin(store, options) {
     router.use(passport.session())
 
     /* setup routes */
-    router.use('/auth', auth(authService(store.auth)).router)
+    router.use('/auth', auth(null, middleware.auth).router)
     
     // restrict access to other routes unless logged in
     router.use((req, res, next) => {
@@ -31,11 +27,11 @@ function admin(store, options) {
         next()
     })
 
-    router.use('/product', product(store.product, store.photo, options).router)
-    router.use('/user', user(store.auth).router)
+    router.use('/product', product(services.store.product, {product: middleware.product, files: middleware.files}).router)
+    router.use('/user', user().router)
 
     /* central error handling */
-    router.use(errorHandler)
+    router.use(middleware.errorHandler)
 
     return router
 }

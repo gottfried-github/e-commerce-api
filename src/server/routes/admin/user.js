@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import {Router} from 'express'
 
-function main(store) {
+function main() {
     const router = Router()
 
     router.get('/logout', (req, res, next) => {

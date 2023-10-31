@@ -1,8 +1,8 @@
 import {assert} from 'chai'
 import {toTree} from 'ajv-errors-to-data-tree'
 
-import {_validate} from '../../src/server/routes/admin/product-validate.js'
-import filterErrors from '../../src/server/routes/admin/product-helpers.js'
+import {_validate} from '../../src/server/middleware/admin/product-validate-lib.js'
+import filterErrors from '../../src/server/middleware/admin/product-helpers.js'
 
 import {_test} from './product-validate.js'
 
@@ -41,13 +41,12 @@ function testFilterErrors() {
             o: (errors) => {filterErrors(errors); return errors},
             description: "invalid expose and invalid name. See 1 in Filtering out irrelevant errors"
         }],
-        nameTypePriceRequired: [{
+        nameTypeOthersRequired: [{
             i: [((data) => {
                 _validate(data)
                 return toTree(_validate.errors)
             })({
                 expose: true, name: 5, 
-                is_in_stock: false, photos: ['some/url'], cover_photo: 'some/url', description: "some description"
             })],
             o: (errors) => {filterErrors(errors); return errors},
             description: "true expose and invalid name. See 2 in Filtering out irrelevant errors"
