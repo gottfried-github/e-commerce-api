@@ -1,6 +1,6 @@
 import {assert} from 'chai'
 
-import validate from '../../src/server/routes/admin/product-validate.js'
+import validate from '../../src/server/middleware/admin/product-validate-lib.js'
 
 const tests = {
     exposeRequired: [{
@@ -16,20 +16,19 @@ const tests = {
     exposeRequiredNameType: [{
         i: [{name: 5}],
         o: (fields) => {return validate(fields)},
-        description: "missing expose and invalid name: shouldn't contain 'required' error for itemInitial - see Which errors to report"
+        description: "missing expose and invalid name: shouldn't contain 'required' error for the other fields - see Which errors to report"
     }],
     exposeNameType: [{
         i: [{expose: 5, name: 5}],
         o: (fields) => {return validate(fields)},
-        description: "invalid expose and invalid name: shouldn't contain 'required' error for itemInitial - see Which errors to report"
+        description: "invalid expose and invalid name: shouldn't contain 'required' error for the other fields - see Which errors to report"
     }],
-    nameTypePriceRequired: [{
+    nameTypeOthersRequired: [{
         i: [{
             expose: true, name: 5,
-            is_in_stock: false, photos: ['some/url'], cover_photo: 'some/url', description: "some description"
         }],
         o: (fields) => {return validate(fields)},
-        description: "true expose and invalid name: should contain 'required' error for itemInitial - the case is implied in Which errors to report"
+        description: "true expose and invalid name: should contain 'required' error for the other fields - the case is implied in Which errors to report"
     }],
 }
 
@@ -106,7 +105,7 @@ function _test(tests) {
         })
     })
 
-    tests.nameTypePriceRequired.forEach(t => {
+    tests.nameTypeOthersRequired.forEach(t => {
         describe(t.description || "", () => {
             it("contains ONLY a 'type' error for name and a 'required' error for price", () => {
                 const errors = t.o(...t.i)
@@ -114,10 +113,17 @@ function _test(tests) {
                 const keys = Object.keys(errors.node)
 
                 assert(
-                    2 === keys.length && keys.includes('name') && keys.includes('price')
+                    // errors.node contains 7 fields
+                    7 === keys.length && keys.includes('name') && keys.includes('price')
 
+                    // each of the fields have one proper error
                     && 1 === errors.node.name.errors.length && 'type' === errors.node.name.errors[0].data.keyword
                     && 1 === errors.node.price.errors.length && 'required' === errors.node.price.errors[0].data.keyword
+                    && 1 === errors.node.is_in_stock.errors.length && 'required' === errors.node.price.errors[0].data.keyword
+                    && 1 === errors.node.photos.errors.length && 'required' === errors.node.price.errors[0].data.keyword
+                    && 1 === errors.node.cover_photo.errors.length && 'required' === errors.node.price.errors[0].data.keyword
+                    && 1 === errors.node.description.errors.length && 'required' === errors.node.price.errors[0].data.keyword
+                    && 1 === errors.node.time.errors.length && 'required' === errors.node.price.errors[0].data.keyword
                 )
             })
         })
