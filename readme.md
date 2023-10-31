@@ -21,10 +21,10 @@ The router uses [passport](http://www.passportjs.org/) which requires [express-s
 ## Server
 The code is organized into services, middleware and routes. 
 
-Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
+Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/middleware/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation
-Input validation is done [here](/src/server/routes/admin/product-validate.js). 
+Input validation is done [here](/src/server/middleware/admin/product-validate-lib.js). 
 
 I implement validation using `json-schema` `oneOf` keyword: I apply different schemas for when `expose` is `true` and when it's `false` (see [Data structure](#data-structure) for the relationship between `expose` and other fields).
 
@@ -63,7 +63,7 @@ So, whenever an error occurs, there will be identical errors for each of the sch
 2. if `expose` satisfies one of the schemas, there will be no `enum` error for that schema (because of `1` from above).
 
 ##### Filtering out irrelevant errors
-[`filterErrors`](https://github.com/gottfried-github/e-commerce-api/blob/8a879c13dd7c5d014dca5aa27216f002f9556c1b/src/server/routes/admin/product-helpers.js#L23) adheres to these principles.
+[`filterErrors`](https://github.com/gottfried-github/e-commerce-api/blob/master/src/server/middleware/admin/product-helpers.js#L23) adheres to these principles.
 
 1. *In case if `expose` is invalid or missing*: the `required` errors for the other fields are irrelevant - see [Which errors to report](#which-errors-to-report); all the other errors will be identical for each of the schemas -- so we can
     1. ignore the `required` errors for the other fields and
