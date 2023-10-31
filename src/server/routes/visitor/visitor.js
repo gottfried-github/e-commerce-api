@@ -2,13 +2,11 @@ import {Router} from 'express'
 
 import product from './product.js'
 
-import {errorHandler} from '../../error-handler.js'
-
-function visitor(store) {
+function visitor(services, middleware) {
     const router = Router()
 
-    router.use('/product', product(store.product).router)
-    router.use(errorHandler)
+    router.use('/product', product(services.store.product, middleware.product).router)
+    router.use(middleware.errorHandler)
 
     return router
 }

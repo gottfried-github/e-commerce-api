@@ -1,21 +1,12 @@
-import {Router} from 'express'
-
-import {log, logger} from './logger.js'
-
-import admin from './routes/admin/admin.js'
-import visitor from './routes/visitor/visitor.js'
+import middleware from './middleware/index.js'
+import services from './services/index.js'
+import routes from './routes/index.js'
 
 function api(store, options) {
-    const router = Router()
+    const _services = services(store)
+    const _middleware = middleware(_services, options)
 
-    /* attach logger to express */
-    router.use((req, res, next) => {
-        req.log = log.bind(logger)
-        next()
-    })
-
-    router.use('/admin', admin(store, options))
-    router.use(visitor(store))
+    const router = routes(_services, _middleware)
 
     return router
 }

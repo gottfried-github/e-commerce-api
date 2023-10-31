@@ -4,8 +4,6 @@ import {Router} from 'express'
 import {log, logger} from '../../logger.js'
 import * as m from '../../../../../e-commerce-common/messages.js'
 
-import {ensureCredentials} from './auth-validate.js'
-
 function authenticate(req, res, next, {authenticate}) {
     return authenticate(req, res, next).then(_res => {
         // req.log('authMiddleware, authenticate resolved, _res:', _res)
@@ -39,10 +37,10 @@ function authenticate(req, res, next, {authenticate}) {
 //     })
 // }
 
-function auth(auth) {
+function auth(services, middleware) {
     const router = Router()
 
-    router.post('/login', bodyParser.urlencoded(), ensureCredentials, (req, res, next) => {authenticate(req, res, next, {authenticate: auth.authenticate})})
+    router.post('/login', bodyParser.urlencoded({extended: false}), middleware.validate, (req, res, next) => {authenticate(req, res, next, {authenticate: middleware.auth})})
     // router.post('/signup', bodyParser.urlencoded(), ensureCredentials, 
     //     // validate password
     //     (req, res, next) => {

@@ -19,6 +19,8 @@ The router uses [passport](http://www.passportjs.org/) which requires [express-s
 
 # Code overview
 ## Server
+The code is organized into services, middleware and routes. 
+
 Routes are grouped into a number of [express](https://expressjs.com/) routers which are basically organized around store collections. The routers are all attached to the top router (see [the code](/src/server/routes/admin/admin.js)). Error handling is done in a centralized fashion, in [`_errorHandler`](/src/server/error-handler.js) which maps the various errors to http status codes and sends them to the client.
 
 ### Validation

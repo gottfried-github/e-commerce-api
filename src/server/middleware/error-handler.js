@@ -1,5 +1,5 @@
 import createError from 'http-errors'
-import * as m from '../../../e-commerce-common/messages.js'
+import * as m from '../../../../e-commerce-common/messages.js'
 
 function _errorHandler(e, req, res, next) {
     if (!e) return next()
@@ -29,4 +29,9 @@ function errorHandler(e, req, res, next) {
     return _errorHandler(e, req, res, next)
 }
 
-export {_errorHandler, errorHandler}
+function errorHandlerFactory() {
+    return errorHandler
+}
+
+export {errorHandlerFactory as default, _errorHandler}
+

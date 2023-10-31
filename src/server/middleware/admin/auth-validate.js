@@ -50,4 +50,4 @@ const _validatePsswd = ajv.compile({
 //     return null
 // }
 
-export {ensureCredentials}
+export default () => ensureCredentials

@@ -3,27 +3,20 @@ import {Router} from 'express'
 
 import * as m from '../../../../../e-commerce-common/messages.js'
 
-import validate from './product-validate.js'
 import files from './product-files.js'
 
-function product(storeProduct, storePhoto, options) {
+function product(services, middleware) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), 
-        // validate
-        (req, res, next) => {
-            const errors = validate(req.body)
-            if (errors) return next(m.ValidationError.create("some fields are filled incorrectly", errors))
-
-            return next()
-        }, 
+        middleware.product.validateCreate,
         // handle request
         async (req, res, next) => {
             // console.log('/api/admin/product/create, body.fields:', req.body.fields)
 
             let id = null
             try {
-                id = await storeProduct.create(req.body)
+                id = await services.create(req.body)
             } catch(e) {
                 return next(e)
             }
@@ -34,36 +27,18 @@ function product(storeProduct, storePhoto, options) {
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
     router.post('/update/:id', bodyParser.json(), 
-        // validate
-        (req, res, next) => {
-            if (req.body.write) {
-                const errors = validate(req.body.write)
-                if (errors) return next(m.ValidationError.create("some fields are filled incorrectly", errors))
-
-                return next()
-            }
-
-            return next()
-        }, 
+        middleware.product.validateUpdate,
         // handle request
         async (req, res, next) => {
             let _res = null
 
             try {
-                _res = await storeProduct.update(req.params.id, {write: req.body.write || null, remove: req.body.remove || null})
+                _res = await services.update(req.params.id, req.body)
             } catch (e) {
                 return next(e)
             }
 
-            let doc = null
-
-            try {
-                doc = await storeProduct.getById(req.params.id)
-            } catch (e) {
-                return next(e)
-            }
-
-            res.status(200).json(doc)
+            res.status(200).json(_res)
         }
     )
 
@@ -75,8 +50,7 @@ function product(storeProduct, storePhoto, options) {
         let products = null
 
         try {
-            // see Products view in product spec
-            products = await storeProduct.getMany(null, null, [{name: 'time', dir: -1}])
+            products = await services.getMany()
         } catch(e) {
             return next(e)
         }
@@ -89,7 +63,7 @@ function product(storeProduct, storePhoto, options) {
         // console.log('/api/admin/product/, req.query:', req.query);
         let _product = null
         try {
-            _product = await storeProduct.getById(req.params.id)
+            _product = await services.getById(req.params.id)
         } catch(e) {
             return next(e)
         }
@@ -98,7 +72,7 @@ function product(storeProduct, storePhoto, options) {
         res.json(_product)
     })
 
-    router.use('/photos', files(storePhoto, storeProduct, options).router)
+    router.use('/photos', files(services, {files: middleware.files}).router)
 
     return {router}
 }
