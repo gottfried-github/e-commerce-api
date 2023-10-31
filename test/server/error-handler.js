@@ -4,7 +4,7 @@ import * as m from '../../../e-commerce-common/messages.js'
 
 import {Req, Res} from './mocks.js'
 
-import {_errorHandler} from '../../src/server/error-handler.js'
+import {_errorHandler} from '../../src/server/middleware/error-handler.js'
 
 function testHandler() {
     describe("passed HttpError", () => {
