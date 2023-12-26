@@ -5,7 +5,7 @@ function main(store) {
     return {
         store: {
             product: product({
-                product: store.product, photo: store.photo
+                product: store.product
             }),
             auth: auth(store.auth)
         }

@@ -21,28 +21,18 @@ function main(store) {
         async addPhotos(id, photos) {
             let _resPhotos = null
         
-            // write to Photo
+            let res = null
+        
             try {
-                _resPhotos = await store.photo.createMany(photos)
-            } catch(e) {
-                if (m.ValidationError.code === e.code) {
-
-                    // data was generated server-side so must be internal error
-                    const _e = new Error(e.message)
-                    _e.data = e
-
-                    throw _e
-                }
+                res = await store.product.addPhotos(id, photos)
+            } catch (e) {
+                
+                // remove photos files from the filesystem
 
                 throw e
             }
 
-            // write to the product
-            
-            const _resProduct = await store.product.updatePhotos(id, _resPhotos)
-
-            if (null === _resPhotos) return null
-            // if (null === _resProduct) return res.status(400).json({message: 'photos saved but no document matched id'})
+            if (res !== true) throw new Error('store returned incorrect value')
 
             // get the product to send to the client
             return store.product.getById(id)
