@@ -7,9 +7,12 @@ function main(services, middleware) {
 
     router.post('/upload', middleware.files, async (req, res, next) => {
         let _res = null
-        
+
         try {
-            _res = await services.addPhotos(req.body.id, req.filesPublic)
+            _res = await services.addPhotos(req.body.id, req.filesPaths.map(path => ({
+                pathPublic: path.public,
+                pathLocal: path.local
+            })))
         } catch (e) {
             return next(e)
         }
