@@ -11,7 +11,7 @@ function main(store) {
 
         getMany() {
             // see Products view in product spec
-            return services.storeProduct.getMany(null, null, [{name: 'time', dir: -1}])
+            return store.product.getMany(null, null, [{name: 'time', dir: -1}])
         },
 
         getById(id) {
