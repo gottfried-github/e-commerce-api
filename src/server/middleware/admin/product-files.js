@@ -10,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
  * @param {String} options.productUploadPath path to uploads dir, relative to options.root
  * @param {String} options.productDiffPath path, relative to which actual pathname of each uploaded file should be stored
  * @param {String} options.root absolute path to app's root
+ * @param {String} options.productPublicPrefix should be prepended to file's public path
 */
 function main(options) {
     const multerMiddleware = multer({storage: multer.diskStorage({
@@ -33,7 +34,7 @@ function main(options) {
         req.filesPaths = req.files.map(file => {
             return {
                 public: path.join(
-                    '/', 
+                    options.productPublicPrefix, 
                     path.relative(
                         path.join(options.root, options.productDiffPath), 
                         file.path
