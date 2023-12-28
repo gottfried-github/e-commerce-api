@@ -1,4 +1,13 @@
-function main(store) {
+import fs from 'fs/promises'
+import path from 'path'
+
+/**
+ * @param {String} options.productUploadPath path to uploads dir, relative to options.root
+ * @param {String} options.productDiffPath path, relative to which actual pathname of each uploaded file should be stored
+ * @param {String} options.root absolute path to app's root
+ * @param {String} options.productPublicPrefix should be prepended to file's public path
+*/
+function main(store, options) {
     return {
         create(fields) {
             return store.product.create(fields)
@@ -25,11 +34,21 @@ function main(store) {
         
             try {
                 res = await store.product.addPhotos(id, photos)
-            } catch (e) {
+            } catch (eDb) {
                 
                 // remove photos files from the filesystem
+                try {
+                    for (const photo of photos) {
+                        await fs.rm(path.join(options.root, photo.pathLocal))
+                    }
+                } catch (eFiles) {
+                    const _e = new Error("adding photos to the database and removing respective files failed")
 
-                throw e
+                    _e.errorDb = eDb
+                    _e.errorFiles = eFiles
+                }
+
+                throw eDb
             }
 
             if (res !== true) throw new Error('store returned incorrect value')

@@ -1,11 +1,11 @@
 import product from './store-product.js'
 import auth from './store-auth.js'
 
-function main(store) {
+function main(store, options) {
     return {
         store: {
             product: product({
-                product: store.product
+                product: store.product, options
             }),
             auth: auth(store.auth)
         }

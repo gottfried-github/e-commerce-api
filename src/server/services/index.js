@@ -1,9 +1,9 @@
 import storeAdmin from './admin/store.js'
 import storeVisitor from './visitor/store.js'
 
-function main(store) {
+function main(store, options) {
     return {
-        admin: storeAdmin(store),
+        admin: storeAdmin(store, options),
         visitor: storeVisitor(store)
     }
 }
