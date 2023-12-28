@@ -16,8 +16,12 @@ function main(services, middleware, options) {
 
     console.log("routes, index - middleware:", middleware)
 
-    router.use('/admin', admin(services.admin, {...middleware.admin, ...middleware.common}, options))
-    router.use(visitor(services.visitor, {...middleware.visitor, ...middleware.common}))
+    router.use('/admin', admin({
+        resources: services.resources.admin
+    }, {...middleware.admin, ...middleware.common}, options))
+    router.use(visitor({
+        store: services.store.visitor
+    }, {...middleware.visitor, ...middleware.common}))
 
     return router
 }
