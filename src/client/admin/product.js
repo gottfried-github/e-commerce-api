@@ -60,6 +60,21 @@ async function upload(id, files, successCb, failureCb) {
     return successCb(body, res)
 }
 
+async function removePhotos(id, photos, successCb, failureCb) {
+    const res = await fetch('/api/admin/product/photos/remove', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            id, photos
+        })
+    })
+
+    const body = await res.json()
+
+    if (!res.ok) return failureCb(body, res)
+    return successCb(body, res)
+}
+
 /**
  * @param {String} id id of product to get
 */
@@ -81,4 +96,4 @@ async function getMany(successCb, failureCb) {
     return successCb(body, res)
 }
 
-export {create, update, upload, get, getMany}
+export {create, update, upload, removePhotos, get, getMany}

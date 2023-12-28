@@ -55,6 +55,14 @@ function main(store, options) {
 
             // get the product to send to the client
             return store.product.getById(id)
+        },
+
+        async removePhotos(id, photos) {
+            try {
+                await store.product.removePhotos(id, photos)
+            } catch (e) {
+                throw e
+            }
         }
     }
 }
