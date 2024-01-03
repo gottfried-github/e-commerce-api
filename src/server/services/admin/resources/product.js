@@ -57,11 +57,11 @@ function main(store, options) {
             return store.product.getById(id)
         },
 
-        async removePhotos(id, photos) {
+        async removePhotos(id, photosIds) {
             let res = null
 
             try {
-                res = await store.product.removePhotos(id, photos)
+                res = await store.product.removePhotos(id, photosIds)
             } catch (e) {
                 throw e
             }
@@ -69,6 +69,48 @@ function main(store, options) {
             if (res !== true) throw new Error("store returned incorrect value")
 
             // remove photos from filesystem
+        },
+
+        async reorderPhotos(productId, photos) {
+            let res = null
+
+            try {
+                res = await store.product.reorderPhotos(productId, photos)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
+        },
+
+        async updatePhotosPublicity(productId, photos) {
+            let res = null
+
+            try {
+                res = await store.product.updatePhotosPublicity(productId, photos)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
+        },
+
+        async setCoverPhoto(productId, photo) {
+            let res = null
+
+            try {
+                res = await store.product.setCoverPhoto(productId, photo)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
         }
     }
 }
