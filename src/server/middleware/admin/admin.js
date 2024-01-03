@@ -1,7 +1,7 @@
 import auth from './auth.js'
 import authValidate from './auth-validate.js'
-import product from './product-validate.js'
-import files from './product-files.js'
+import product from './product/product-validate.js'
+import files from './product/photos-files.js'
 
 function main(services, options) {
     return {
