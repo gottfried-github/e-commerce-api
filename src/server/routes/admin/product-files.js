@@ -18,25 +18,19 @@ function main(services, middleware) {
             return next(e)
         }
 
-        if (null === _res) return res.status(400).json({message: 'photos saved but no document matched id'})
-
         res.status(201).json(_res)
     })
 
     router.post('/remove', bodyParser.json(), async (req, res, next) => {
-        console.log('/product/photos/remove, req.body:', req.body)
+        let _res = null
 
         try {
-            await services.removePhotos(req.body.id, req.body.photos)
+            _res = await services.removePhotos(req.body.id, req.body.photos)
         } catch (e) {
-            res.status(500).send('')
+            next(e)
         }
 
-        res.status(201).send('')
-
-        // const doc = await services.getById(req.body.id)
-
-        // res.status(201).json(doc)
+        res.status(201).json(_res)
     })
 
     return {router}

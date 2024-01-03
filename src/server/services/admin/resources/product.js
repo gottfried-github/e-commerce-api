@@ -28,8 +28,6 @@ function main(store, options) {
         },
 
         async addPhotos(id, photos) {
-            let _resPhotos = null
-        
             let res = null
         
             try {
@@ -46,6 +44,8 @@ function main(store, options) {
 
                     _e.errorDb = eDb
                     _e.errorFiles = eFiles
+
+                    throw _e
                 }
 
                 throw eDb
@@ -58,11 +58,17 @@ function main(store, options) {
         },
 
         async removePhotos(id, photos) {
+            let res = null
+
             try {
-                await store.product.removePhotos(id, photos)
+                res = await store.product.removePhotos(id, photos)
             } catch (e) {
                 throw e
             }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            // remove photos from filesystem
         }
     }
 }
