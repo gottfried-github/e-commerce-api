@@ -1,3 +1,4 @@
+import * as m from '../../../../../../e-commerce-common/messages.js'
 import _validate from '../../../lib/admin/validate/product/product.js'
 
 function create(req, res, next) {
