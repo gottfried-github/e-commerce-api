@@ -27,7 +27,7 @@ function admin(services, middleware, options) {
         next()
     })
 
-    router.use('/product', product(services.resources.product, {product: middleware.product, files: middleware.files}).router)
+    router.use('/product', product(services.resources.product, middleware.product).router)
     router.use('/user', user().router)
 
     /* central error handling */

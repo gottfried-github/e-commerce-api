@@ -1,4 +1,4 @@
-import _validate from './product-validate-lib.js'
+import _validate from '../../../lib/admin/validate/product/product.js'
 
 function create(req, res, next) {
     const errors = _validate(req.body)
@@ -18,4 +18,4 @@ function update(req, res, next) {
     return next()
 }
 
-export default () => ({validateCreate: create, validateUpdate: update})
+export default () => ({create, update})

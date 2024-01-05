@@ -9,7 +9,7 @@ function product(services, middleware) {
     const router = Router()
 
     router.post('/create', bodyParser.json(), 
-        middleware.product.validateCreate,
+        middleware.validate.product.create,
         // handle request
         async (req, res, next) => {
             // console.log('/api/admin/product/create, body.fields:', req.body.fields)
@@ -27,7 +27,7 @@ function product(services, middleware) {
 
     // see '/api/admin/product:id' in notes for why I don't validate params.id
     router.post('/update/:id', bodyParser.json(), 
-        middleware.product.validateUpdate,
+        middleware.validate.product.update,
         // handle request
         async (req, res, next) => {
             let _res = null
