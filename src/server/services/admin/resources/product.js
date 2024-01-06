@@ -57,11 +57,19 @@ function main(store, options) {
             return store.product.getById(id)
         },
 
-        async removePhotos(id, photosIds) {
+        async removePhotos(productId, photosIds) {
             let res = null
 
+            const photosDocs = await store.product.getPhotos(productId)
+
+            const photosToRemoveDocs = photosDocs.reduce((photosToRemove, photo) => {
+                if (photosIds.includes(photo.id.toString())) photosToRemove.push(photo)
+
+                return photosToRemove
+            }, [])
+
             try {
-                res = await store.product.removePhotos(id, photosIds)
+                res = await store.product.removePhotos(productId, photosIds)
             } catch (e) {
                 throw e
             }
@@ -69,6 +77,13 @@ function main(store, options) {
             if (res !== true) throw new Error("store returned incorrect value")
 
             // remove photos from filesystem
+            try {
+                for (const photo of photosToRemoveDocs) {
+                    await fs.rm(path.join(options.root, photo.pathLocal))
+                }
+            } catch (e) {
+                throw e
+            }
         },
 
         async reorderPhotos(productId, photos) {
