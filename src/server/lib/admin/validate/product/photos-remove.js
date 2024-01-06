@@ -6,9 +6,21 @@ import * as m from '../../../../../../../e-commerce-common/messages.js'
 const ajv = new Ajv({allErrors: true, strictRequired: true})
 
 const schema = {
-    type: 'array',
-    items: {
-        type: 'string'
+    type: 'object',
+    properties: {
+        productId: {
+            type: 'string',
+            minLength: 1
+        },
+        photosIds: {
+            type: 'array',
+            items: {
+                type: 'string',
+                minLength: 1
+            }
+        },
+        required: ['productId, photosIds'],
+        additionalProperties: false
     }
 }
 
@@ -18,6 +30,7 @@ function validate(photoIds) {
     if (_validate(photoIds)) return false
 
     const errors = toTree(_validate.errors, (e) => {
+        if ('required' === e.keyword) return m.FieldMissing.create(e.message, e)
         if ('type' === e.keyword) return m.TypeErrorMsg.create(e.message, e)
 
         return m.ValidationError.create(e.message, null, e)

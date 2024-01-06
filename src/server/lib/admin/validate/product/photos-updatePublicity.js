@@ -6,18 +6,30 @@ import * as m from '../../../../../../../e-commerce-common/messages.js'
 const ajv = new Ajv({allErrors: true, strictRequired: true})
 
 const schema = {
-    type: 'array',
-    items: {
-        type: 'object',
-        properties: {
-            id: {
-                type: 'string'
-            },
-            public: {
-                type: 'boolean'
+    type: 'object',
+    properties: {
+        productId: {
+            type: 'string',
+            minLength: 1
+        },
+        photos: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    id: {
+                        type: 'string',
+                        minLength: 1
+                    },
+                    public: {
+                        type: 'boolean'
+                    }
+                },
+                required: ['id', 'public'],
+                additionalProperties: false
             }
         },
-        required: ['id', 'public'],
+        required: ['productId, photos'],
         additionalProperties: false
     }
 }

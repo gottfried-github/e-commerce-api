@@ -8,15 +8,27 @@ const ajv = new Ajv({allErrors: true, strictRequired: true})
 const schema = {
     type: 'object',
     properties: {
-        id: {
-            type: 'string'
+        productId: {
+            type: 'string',
+            minLength: 1
         },
-        cover: {
-            type: 'boolean'
-        }
-    },
-    required: ['id', 'cover'],
-    additionalProperties: false
+        photo: {
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'string',
+                    minLength: 1
+                },
+                cover: {
+                    type: 'boolean'
+                }
+            },
+            required: ['id', 'cover'],
+            additionalProperties: false
+        },
+        required: ['productId, photo'],
+        additionalProperties: false
+    }
 }
 
 const _validate = ajv.compile(schema)
