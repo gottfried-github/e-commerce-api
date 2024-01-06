@@ -3,24 +3,20 @@ import {toTree} from 'ajv-errors-to-data-tree'
 
 import * as m from '../../../../../../../e-commerce-common/messages.js'
 
+import objectIdSchema from '../../../objectId-schema.js'
+
 const ajv = new Ajv({allErrors: true, strictRequired: true})
 
 const schema = {
     type: 'object',
     properties: {
-        productId: {
-            type: 'string',
-            minLength: 1
-        },
+        productId: objectIdSchema,
         photos: {
             type: 'array',
             items: {
                 type: 'object',
                 properties: {
-                    id: {
-                        type: 'string',
-                        minLength: 1
-                    },
+                    id: objectIdSchema,
                     order: {
                         type: 'integer'
                     }
