@@ -21,11 +21,11 @@ function main(services, middleware) {
         res.status(201).json(_res)
     })
 
-    router.post('/remove', bodyParser.json(), async (req, res, next) => {
+    router.post('/remove', bodyParser.json(), middleware.validate.remove, async (req, res, next) => {
         let _res = null
 
         try {
-            _res = await services.removePhotos(req.body.id, req.body.photos)
+            _res = await services.removePhotos(req.body.id, req.body.photosIds)
         } catch (e) {
             next(e)
         }

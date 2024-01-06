@@ -72,7 +72,14 @@ function product(services, middleware) {
         res.json(_product)
     })
 
-    router.use('/photos', files(services, {files: middleware.files}).router)
+    router.use('/photos', files(
+        services, 
+        {
+            files: middleware.files,
+            validate: middleware.validate.photos
+        }
+        ).router
+    )
 
     return {router}
 }
