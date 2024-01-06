@@ -114,6 +114,15 @@ function main(store, options) {
             return res
         },
 
+        async getPhotos(productId, publicPhotos) {
+            return store.getPhotos(
+                productId, 
+                typeof publicPhotos === 'boolean' 
+                    ? publicPhotos
+                    : null
+            )
+        },
+
         async setCoverPhoto(productId, photo) {
             let res = null
 
