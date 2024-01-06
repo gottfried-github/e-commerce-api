@@ -21,11 +21,16 @@ function main(services, middleware) {
         res.status(201).json(_res)
     })
 
-    router.post('/get', bodyParser.json(), async (req, res, next) => {
+    router.post('/get', bodyParser.json(), middleware.validate.get, async (req, res, next) => {
         let _res = null
 
         try {
-            _res = await services.getPhotos(req.productId, req.public)
+            _res = await services.getPhotos(
+                req.productId, 
+                typeof req.public === 'boolean'
+                    ? req.public
+                    : null
+            )
         } catch (e) {
             return next(e)
         }
