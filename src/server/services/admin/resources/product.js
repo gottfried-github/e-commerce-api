@@ -58,8 +58,6 @@ function main(store, options) {
         },
 
         async removePhotos(productId, photosIds) {
-            let res = null
-
             const photosDocs = await store.product.getPhotos(productId)
 
             const photosToRemoveDocs = photosDocs.reduce((photosToRemove, photo) => {
@@ -67,6 +65,9 @@ function main(store, options) {
 
                 return photosToRemove
             }, [])
+
+
+            let res = null
 
             try {
                 res = await store.product.removePhotos(productId, photosIds)
@@ -84,6 +85,8 @@ function main(store, options) {
             } catch (e) {
                 throw e
             }
+
+            return true
         },
 
         async reorderPhotos(productId, photos) {
