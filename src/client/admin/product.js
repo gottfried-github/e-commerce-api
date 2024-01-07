@@ -60,12 +60,12 @@ async function upload(id, files, successCb, failureCb) {
     return successCb(body, res)
 }
 
-async function removePhotos(id, photos, successCb, failureCb) {
+async function removePhotos(productId, photosIds, successCb, failureCb) {
     const res = await fetch('/api/admin/product/photos/remove', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            id, photos
+            productId, photosIds
         })
     })
 
