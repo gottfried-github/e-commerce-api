@@ -46,8 +46,14 @@ function product(services, middleware) {
     }
   )
 
-  router.post('/delete', (req, res) => {
-    res.send('/product-delete: endpoint is not implemented yet')
+  router.post('/delete/:id', async (req, res) => {
+    try {
+      const _res = await services.delete(req.params.id)
+
+      res.status(200).json(_res)
+    } catch (e) {
+      return next(e)
+    }
   })
 
   router.get('/get-many', async (req, res, next) => {
