@@ -57,11 +57,20 @@ function main(store, options) {
             return store.product.getById(id)
         },
 
-        async removePhotos(id, photos) {
+        async removePhotos(productId, photosIds) {
+            const photosDocs = await store.product.getPhotos(productId)
+
+            const photosToRemoveDocs = photosDocs.reduce((photosToRemove, photo) => {
+                if (photosIds.includes(photo.id.toString())) photosToRemove.push(photo)
+
+                return photosToRemove
+            }, [])
+
+
             let res = null
 
             try {
-                res = await store.product.removePhotos(id, photos)
+                res = await store.product.removePhotos(productId, photosIds)
             } catch (e) {
                 throw e
             }
@@ -69,6 +78,66 @@ function main(store, options) {
             if (res !== true) throw new Error("store returned incorrect value")
 
             // remove photos from filesystem
+            try {
+                for (const photo of photosToRemoveDocs) {
+                    await fs.rm(path.join(options.root, photo.pathLocal))
+                }
+            } catch (e) {
+                throw e
+            }
+
+            return true
+        },
+
+        async reorderPhotos(productId, photos) {
+            let res = null
+
+            try {
+                res = await store.product.reorderPhotos(productId, photos)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
+        },
+
+        async updatePhotosPublicity(productId, photos) {
+            let res = null
+
+            try {
+                res = await store.product.updatePhotosPublicity(productId, photos)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
+        },
+
+        async getPhotos(productId, publicPhotos) {
+            return store.getPhotos(
+                productId, 
+                typeof publicPhotos === 'boolean' 
+                    ? publicPhotos
+                    : null
+            )
+        },
+
+        async setCoverPhoto(productId, photo) {
+            let res = null
+
+            try {
+                res = await store.product.setCoverPhoto(productId, photo)
+            } catch (e) {
+                throw e
+            }
+
+            if (res !== true) throw new Error("store returned incorrect value")
+
+            return res
         }
     }
 }

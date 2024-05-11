@@ -21,13 +21,66 @@ function main(services, middleware) {
         res.status(201).json(_res)
     })
 
-    router.post('/remove', bodyParser.json(), async (req, res, next) => {
+    router.post('/get', bodyParser.json(), middleware.validate.get, async (req, res, next) => {
         let _res = null
 
         try {
-            _res = await services.removePhotos(req.body.id, req.body.photos)
+            _res = await services.getPhotos(
+                req.productId, 
+                typeof req.public === 'boolean'
+                    ? req.public
+                    : null
+            )
         } catch (e) {
-            next(e)
+            return next(e)
+        }
+
+        res.status(200).json(_res)
+    })
+
+    router.post('/remove', bodyParser.json(), middleware.validate.remove, async (req, res, next) => {
+        let _res = null
+
+        try {
+            _res = await services.removePhotos(req.body.productId, req.body.photosIds)
+        } catch (e) {
+            return next(e)
+        }
+
+        res.status(201).json(_res)
+    })
+
+    router.post('/reorder', bodyParser.json(), middleware.validate.reorder, async (req, res, next) => {
+        let _res = null
+
+        try {
+            _res = await services.reorderPhotos(req.body.productId, req.body.photos)
+        } catch (e) {
+            return next(e)
+        }
+
+        res.status(201).json(_res)
+    })
+
+    router.post('/updatePublicity', bodyParser.json(), middleware.validate.updatePublicity, async (req, res, next) => {
+        let _res = null
+
+        try {
+            _res = await services.updatePhotosPublicity(req.body.productId, req.body.photos)
+        } catch (e) {
+            return next(e)
+        }
+
+        res.status(201).json(_res)
+    })
+
+    router.post('/setCover', bodyParser.json(), middleware.validate.setCover, async (req, res, next) => {
+        let _res = null
+
+        try {
+            _res = await services.setCoverPhoto(req.body.productId, req.body.photo)
+        } catch (e) {
+            return next(e)
         }
 
         res.status(201).json(_res)
