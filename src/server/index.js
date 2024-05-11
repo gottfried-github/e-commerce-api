@@ -3,12 +3,12 @@ import services from './services/index.js'
 import routes from './routes/index.js'
 
 function api(store, options) {
-    const _services = services(store, options)
-    const _middleware = middleware(_services, options)
+  const _services = services(store, options)
+  const _middleware = middleware(_services, options)
 
-    const router = routes(_services, _middleware)
+  const router = routes(_services, _middleware)
 
-    return router
+  return router
 }
 
-export {api}
+export { api }

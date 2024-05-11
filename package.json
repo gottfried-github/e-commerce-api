@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "chai": "^4.3.7",
-    "mocha": "^10.1.0"
+    "mocha": "^10.1.0",
+    "prettier": "^3.2.5"
   },
   "eCommerceDependencies": {
     "e-commerce-spec": "0.1.0",

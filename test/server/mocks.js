@@ -1,22 +1,22 @@
 class Req {
-    log() {}
+  log() {}
 }
 
 class Res {
-    constructor(statusCb, jsonCb) {
-        this._statusCb = statusCb || null
-        this._jsonCb = jsonCb || null
-    }
+  constructor(statusCb, jsonCb) {
+    this._statusCb = statusCb || null
+    this._jsonCb = jsonCb || null
+  }
 
-    status(...args) {
-        if (this._statusCb) this._statusCb(...args)
+  status(...args) {
+    if (this._statusCb) this._statusCb(...args)
 
-        return this
-    }
+    return this
+  }
 
-    json(...args) {
-        if (this._jsonCb) this._jsonCb(...args)
-    }
+  json(...args) {
+    if (this._jsonCb) this._jsonCb(...args)
+  }
 }
 
-export {Req, Res}
+export { Req, Res }

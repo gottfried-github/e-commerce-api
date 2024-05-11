@@ -9,25 +9,25 @@ import validatePhotosSetCover from './product/photos-setCover-validate.js'
 import files from './product/photos-files.js'
 
 function main(services, options) {
-    return {
-        auth: {
-            auth: auth(services.store.auth),
-            validate: authValidate()
+  return {
+    auth: {
+      auth: auth(services.store.auth),
+      validate: authValidate(),
+    },
+    product: {
+      validate: {
+        product: validateProduct(),
+        photos: {
+          get: validatePhotosGet(),
+          remove: validatePhotosRemove(),
+          reorder: validatePhotosReorder(),
+          updatePublicity: validatePhotosUpdatePublicity(),
+          setCover: validatePhotosSetCover(),
         },
-        product: {
-            validate: {
-                product: validateProduct(),
-                photos: {
-                    get: validatePhotosGet(),
-                    remove: validatePhotosRemove(),
-                    reorder: validatePhotosReorder(),
-                    updatePublicity: validatePhotosUpdatePublicity(),
-                    setCover: validatePhotosSetCover(),
-                }
-            },
-            files: files(options)
-        },
-    }
+      },
+      files: files(options),
+    },
+  }
 }
 
 export default main
