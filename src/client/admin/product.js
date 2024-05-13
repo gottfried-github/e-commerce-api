@@ -36,6 +36,18 @@ async function update(id, write, remove, successCb, failureCb) {
   return successCb(body, res)
 }
 
+async function _delete(id, successCb, failureCb) {
+  const res = await fetch(`/api/admin/product/delete/${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  const body = await res.json()
+
+  if (!res.ok) return failureCb(body, res)
+  return successCb(body, res)
+}
+
 /**
  * @param {String} id bson ObjectId-formatted id
  * @param {Array} files File instances
@@ -77,6 +89,70 @@ async function removePhotos(productId, photosIds, successCb, failureCb) {
   return successCb(body, res)
 }
 
+async function reorderPhotos(productId, photos, successCb, failureCb) {
+  const res = await fetch('/api/admin/product/photos/reorder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      productId,
+      photos,
+    }),
+  })
+
+  const body = await res.json()
+
+  if (!res.ok) return failureCb(body, res)
+  return successCb(body, res)
+}
+
+async function updatePhotosPublicity(productId, photos, successCb, failureCb) {
+  const res = await fetch('/api/admin/product/photos/updatePublicity', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      productId,
+      photos,
+    }),
+  })
+
+  const body = await res.json()
+
+  if (!res.ok) return failureCb(body, res)
+  return successCb(body, res)
+}
+
+async function setCoverPhoto(productId, photo, successCb, failureCb) {
+  const res = await fetch('/api/admin/product/photos/setCover', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      productId,
+      photo,
+    }),
+  })
+
+  const body = await res.json()
+
+  if (!res.ok) return failureCb(body, res)
+  return successCb(body, res)
+}
+
+async function getPhotos(productId, publicPhotos, successCb, failureCb) {
+  const _body = { productId }
+  if (typeof publicPhotos === 'boolean') _body.public = publicPhotos
+
+  const res = await fetch('/api/admin/product/photos/get', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(_body),
+  })
+
+  const body = await res.json()
+
+  if (!res.ok) return failureCb(body, res)
+  return successCb(body, res)
+}
+
 /**
  * @param {String} id id of product to get
  */
@@ -98,4 +174,16 @@ async function getMany(successCb, failureCb) {
   return successCb(body, res)
 }
 
-export { create, update, upload, removePhotos, get, getMany }
+export {
+  create,
+  update,
+  _delete as delete,
+  upload,
+  removePhotos,
+  get,
+  getMany,
+  reorderPhotos,
+  updatePhotosPublicity,
+  setCoverPhoto,
+  getPhotos,
+}

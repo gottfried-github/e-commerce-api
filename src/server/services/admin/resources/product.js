@@ -68,7 +68,7 @@ function main(store, options) {
       if (res !== true) throw new Error('store returned incorrect value')
 
       // get the product to send to the client
-      return store.product.getById(id)
+      return res
     },
 
     async removePhotos(productId, photosIds) {
@@ -131,7 +131,10 @@ function main(store, options) {
     },
 
     async getPhotos(productId, publicPhotos) {
-      return store.getPhotos(productId, typeof publicPhotos === 'boolean' ? publicPhotos : null)
+      return store.product.getPhotos(
+        productId,
+        typeof publicPhotos === 'boolean' ? publicPhotos : null
+      )
     },
 
     async setCoverPhoto(productId, photo) {

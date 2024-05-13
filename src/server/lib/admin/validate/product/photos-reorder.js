@@ -25,9 +25,9 @@ const schema = {
         additionalProperties: false,
       },
     },
-    required: ['productId, photos'],
-    additionalProperties: false,
   },
+  required: ['productId', 'photos'],
+  additionalProperties: false,
 }
 
 const _validate = ajv.compile(schema)

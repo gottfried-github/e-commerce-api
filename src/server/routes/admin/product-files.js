@@ -29,8 +29,8 @@ function main(services, middleware) {
 
     try {
       _res = await services.getPhotos(
-        req.productId,
-        typeof req.public === 'boolean' ? req.public : null
+        req.body.productId,
+        typeof req.body.public === 'boolean' ? req.body.public : null
       )
     } catch (e) {
       return next(e)

@@ -10,6 +10,8 @@ function _errorHandler(e, req, res, next) {
     if (m.ValidationError.code === e.code || m.InvalidCriterion.code === e.code)
       return res.status(400).json(e)
     if (m.ResourceExists.code === e.code) return res.status(409).json(e)
+
+    if (m.ResourceNotFound.code === e.code) return res.status(404).json(e)
   }
 
   // bodyParser generates these

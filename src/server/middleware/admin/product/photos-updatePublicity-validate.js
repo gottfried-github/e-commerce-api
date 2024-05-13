@@ -4,7 +4,7 @@ import validate from '../../../lib/admin/validate/product/photos-updatePublicity
 export default () => (req, res, next) => {
   const errors = validate(req.body)
 
-  if (!errors) next()
+  if (!errors) return next()
 
   next(m.ValidationError.create('some fields are filled incorrectly', errors.node))
 }

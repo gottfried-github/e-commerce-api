@@ -14,9 +14,9 @@ const schema = {
     public: {
       type: 'boolean',
     },
-    required: ['productId'],
-    additionalProperties: false,
   },
+  required: ['productId'],
+  additionalProperties: false,
 }
 
 const _validate = ajv.compile(schema)
