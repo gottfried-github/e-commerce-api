@@ -21,6 +21,18 @@ function main(store, options) {
       return store.product.getById(id)
     },
 
+    async delete(id) {
+      const photos = await store.product.getPhotos(id)
+      const resProduct = await store.product.delete(id)
+
+      // remove photos files from the filesystem
+      for (const photo of photos) {
+        await fs.rm(path.join(options.root, photo.pathLocal))
+      }
+
+      return resProduct
+    },
+
     getMany() {
       // see Products view in product spec
       return store.product.getMany(null, null, [{ name: 'time', dir: -1 }])
