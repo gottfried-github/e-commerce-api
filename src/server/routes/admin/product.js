@@ -46,7 +46,7 @@ function product(services, middleware) {
     }
   )
 
-  router.post('/delete/:id', async (req, res) => {
+  router.post('/delete/:id', async (req, res, next) => {
     try {
       const _res = await services.delete(req.params.id)
 

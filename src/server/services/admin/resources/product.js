@@ -22,13 +22,12 @@ function main(store, options) {
     },
 
     async delete(id) {
-      const photos = await store.product.getPhotos(id)
       const resProduct = await store.product.delete(id)
 
-      // remove photos files from the filesystem
-      for (const photo of photos) {
-        await fs.rm(path.join(options.root, photo.pathLocal))
-      }
+      await fs.rm(path.join(options.root, options.productUploadPath, id), {
+        recursive: true,
+        force: true,
+      })
 
       return resProduct
     },
