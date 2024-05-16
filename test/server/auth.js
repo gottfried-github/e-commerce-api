@@ -1,5 +1,5 @@
-import {testRoutes} from './auth-routes.js'
+import { testRoutes } from './auth-routes.js'
 
-describe("auth routes", () => {
-    testRoutes()
+describe('auth routes', () => {
+  testRoutes()
 })

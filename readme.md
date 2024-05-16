@@ -92,8 +92,30 @@ Authentication route handlers are unit tested as well as `_errorHandler` and pro
 ```
 Whether all fields except `expose` are required depends on the value of `expose`: if it is `true` then the other fields are required, and if it is `false` then the other fields are not required.
 
-### `photos_all` and `photos`
-Product has `photos_all` and `photos` fields which are arrays of urls pointing to files on the server. The former represents all the photos that are uploaded to the server for the given product; the latter - the photos that are to be displayed to the visitor of the site.
+### The relation between photos and the `expose` field
+Photos, associated with a product are stored in a separate collection. 
+
+Here's their structure:
+
+```json
+{
+    productId: ObjectId,
+    ...
+    public: Boolean,
+    cover: Boolean,
+    order: Number
+}
+```
+
+The `order` field is only present if the `public` field is set to `true`.
+
+Photos with `public: true` are to be displayed to the visitor.
+
+A product can't have `expose: true` if it doesn't have any photos with `public: true` and/or with `cover: true`.
+
+I enforce this at the level of write operations in the store (when creating/updating the product and when updating the relevant fields in the product's photos). 
+
+I treat discrepancies in this respect (e.g., when one tries to set `expose` to `true` when there's no `public` photos) as a validation error.
 
 ### The `time` field
 Time is stored in the format of the number of milliseconds since Unix time (Jan 1, 1970 UTC). Any time that's stored is to be treated as UTC time: if the client wants to display the corresponding local time, they should convert the time. Likewise, any local time should be converted to UTC before sending it for storage.
