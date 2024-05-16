@@ -11,19 +11,6 @@ const rest = {
   name: { type: 'string', minLength: 3, maxLength: 150 },
   price: { type: 'number', minimum: 0, maximum: 1000000 },
   is_in_stock: { type: 'boolean' },
-  photos_all: {
-    type: 'array',
-    maxItems: 500,
-    minItems: 1,
-    items: { type: 'string', minLength: 1, maxLength: 1000 },
-  },
-  photos: {
-    type: 'array',
-    maxItems: 150,
-    minItems: 1,
-    items: { type: 'string', minLength: 1, maxLength: 1000 },
-  },
-  cover_photo: { type: 'string', minLength: 1, maxLength: 1000 },
   description: { type: 'string', minLength: 1, maxLength: 15000 },
   time: { type: 'number', minimum: -86e14, maximum: 86e14 },
 }
@@ -36,16 +23,7 @@ const schema = {
         expose: { type: 'boolean', enum: [true] },
         ...rest,
       },
-      required: [
-        'expose',
-        'name',
-        'price',
-        'is_in_stock',
-        'photos',
-        'cover_photo',
-        'description',
-        'time',
-      ],
+      required: ['expose', 'name', 'price', 'is_in_stock', 'description', 'time'],
       additionalProperties: false,
     },
     {
