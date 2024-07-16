@@ -50,7 +50,9 @@ function main(store, options) {
         // remove photos files from the filesystem
         try {
           for (const photo of photos) {
-            await fs.rm(path.join(options.root, photo.pathLocal))
+            for (const k of Object.keys(photo.pathsLocal)) {
+              await fs.rm(path.join(options.root, photo.pathsLocal[k]))
+            }
           }
         } catch (eFiles) {
           const _e = new Error('adding photos to the database and removing respective files failed')
@@ -92,7 +94,9 @@ function main(store, options) {
       // remove photos from filesystem
       try {
         for (const photo of photosToRemoveDocs) {
-          await fs.rm(path.join(options.root, photo.pathLocal))
+          for (const k of Object.keys(photo.pathsLocal)) {
+            await fs.rm(path.join(options.root, photo.pathsLocal[k]))
+          }
         }
       } catch (e) {
         throw e

@@ -10,13 +10,7 @@ function main(services, middleware) {
     let _res = null
 
     try {
-      _res = await services.addPhotos(
-        req.body.id,
-        req.filesPaths.map(path => ({
-          pathPublic: path.public,
-          pathLocal: path.local,
-        }))
-      )
+      _res = await services.addPhotos(req.body.id, req.filesPaths)
     } catch (e) {
       return next(e)
     }
